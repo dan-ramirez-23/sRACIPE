@@ -4,7 +4,7 @@
 using namespace Rcpp;
 
 
-unsigned u_seed = std::chrono::system_clock::now().time_since_epoch().count();
+unsigned u_seed = 123;// std::chrono::system_clock::now().time_since_epoch().count();
 std::mt19937_64 u_generator (u_seed);
 
 //uniformly distributed random number generator in (0,1) range
