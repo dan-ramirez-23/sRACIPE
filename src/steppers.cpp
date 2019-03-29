@@ -2,8 +2,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-unsigned g_seed =
-std::chrono::system_clock::now().time_since_epoch().count()*M_PI_4;
+unsigned g_seed = 123456; //
+// std::chrono::system_clock::now().time_since_epoch().count()*M_PI_4;
 
 std::mt19937_64 g_generator (g_seed);
 
