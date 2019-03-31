@@ -32,6 +32,8 @@ Plot Gene Regulatory Circuit to a file or output device.
 
 \examples{
 data("demoCircuit")
+\dontrun{
 rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100)
 plotCircuit(rSet, plotToFile = FALSE)
+}
 }

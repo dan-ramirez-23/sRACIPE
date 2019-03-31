@@ -21,7 +21,9 @@ The initial conditions of each of the models.
 }
 \examples{
 data("demoCircuit")
+\dontrun{
 rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100)
 ics <- ic(rSet)
 ic(rSet) <- ics
+}
 }

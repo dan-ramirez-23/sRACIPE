@@ -224,6 +224,9 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
               const int stepper = 1)
 
 {
+    std::srand(std::time(0));
+    std::mt19937_64 g_generator (std::rand());
+    
   // Initialize the network
   size_t numberGene = geneInteraction.ncol();
   //vector containing tgtGene of nth interaction
@@ -289,7 +292,7 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
     // Scale the noise level in each gene if scaled_noise = 1
     if(scaledNoise){
 
-      for(int i=0; i<numberGene;i++)
+      for(size_t i=0; i<numberGene;i++)
       {
         Darray[i]=thresholdGene[i];}
  //     Rcout<<"Using a noise level that is
@@ -297,7 +300,7 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
 
     }
     else{
-      for(int i=0; i<numberGene;i++)
+      for(size_t i=0; i<numberGene;i++)
       {
         Darray[i]=1.0;
       }
@@ -345,9 +348,9 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
   //  size_t  nInteractions = convertAdjMatToVector(geneInteraction,
   //                                                tgtGeneTmp, intSrcTypeTmp);
 
-    for(long modelCount=0;modelCount<numModels;modelCount++)
+    for(size_t modelCount=0;modelCount<numModels;modelCount++)
       {
-            if((static_cast<long>(10*modelCount) % numModels) == 0){
+            if((static_cast<size_t>(10*modelCount) % numModels) == 0){
               Rcout<<"====";
             }
 
@@ -417,7 +420,7 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
 
         //Initial condition  selection
         ///////////////////////////////////////////////////////////////////////
-        for(int icCount=0;icCount<nIC;icCount++)
+        for(size_t icCount=0;icCount<nIC;icCount++)
         {
           std::vector <double> expressionGene(numberGene);
           //array for current gene expression
@@ -433,7 +436,7 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
 
           else
           {
-            for(int geneCount1=0;geneCount1<numberGene;geneCount1++)
+            for(size_t geneCount1=0;geneCount1<numberGene;geneCount1++)
             {
               expressionGene0[geneCount1]=exp(std::log(minGene[geneCount1]) +
                 (std::log(maxGene[geneCount1]) -
@@ -446,7 +449,7 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
             //Writing initial condition to file
             //////////////////////////////////////////////////////////////////
 
-            for(int geneCount1=0;geneCount1<numberGene;geneCount1++)
+            for(size_t geneCount1=0;geneCount1<numberGene;geneCount1++)
             {
               outIC<<std::setprecision(outputPrecision)
               <<expressionGene0[geneCount1]<<"\t";
@@ -461,12 +464,12 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
           ///////////////////////////////////////////////////////////////////
           D=initialNoise; //Start with maximum noise level for each model
 
-          for(int geneCount1=0;geneCount1<numberGene;geneCount1++)
+          for(size_t geneCount1=0;geneCount1<numberGene;geneCount1++)
           {
             expressionGene[geneCount1]=expressionGene0[geneCount1];
           }
 
-          for(int fileCount=0;fileCount<nNoise;fileCount++)
+          for(size_t fileCount=0;fileCount<nNoise;fileCount++)
           {
             if(fileCount==nNoise-1){D=0;}
 
@@ -474,7 +477,7 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
 
             if(anneal) {}
             else {
-              for(int geneCount_temp=0;geneCount_temp<numberGene;
+              for(size_t geneCount_temp=0;geneCount_temp<numberGene;
               geneCount_temp++) {
                 expressionGene[geneCount_temp] =
                   expressionGene0[geneCount_temp];

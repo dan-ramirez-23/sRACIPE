@@ -2,14 +2,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-unsigned g_seed = 123456; //
-// std::chrono::system_clock::now().time_since_epoch().count()*M_PI_4;
 
-std::mt19937_64 g_generator (g_seed);
 
-// Gaussian distributed random number generator with mean 0 and 1
-//standard deviation
-std::normal_distribution<double> g_distribution(0.0,1.0);
 
 void calcMultiplier(const int& geneCount1, const int& geneCount2,
                     double& finalMultiplier,

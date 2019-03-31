@@ -10,10 +10,13 @@ size_t generateThresholds(
     Rcpp::NumericVector thresholdGene,
     Rcpp::List config)
 {
-  NumericVector simulationParameters = as<NumericVector>(config["simParams"]);
-  NumericVector stochasticParameters = as<NumericVector>(config["stochParams"]);
-  NumericVector hyperParameters = as<NumericVector>(config["hyperParams"]);
-  LogicalVector options = as<LogicalVector>(config["options"]);
+    std::srand(std::time(0));
+    std::mt19937_64 u_generator (std::rand());
+    
+    NumericVector simulationParameters = as<NumericVector>(config["simParams"]);
+    NumericVector stochasticParameters = as<NumericVector>(config["stochParams"]);
+    NumericVector hyperParameters = as<NumericVector>(config["hyperParams"]);
+    LogicalVector options = as<LogicalVector>(config["options"]);
 
   size_t modelCountMax = static_cast<size_t>(simulationParameters[0]);
 

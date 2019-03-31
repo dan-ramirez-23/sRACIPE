@@ -29,6 +29,8 @@ expressions for stochastic and knockout simulations
 
 \examples{
 data("demoCircuit")
+\dontrun{
 rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100)
 rSet <- normalizeGE(rSet)
+}
 }

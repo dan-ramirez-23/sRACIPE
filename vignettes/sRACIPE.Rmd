@@ -21,7 +21,8 @@ knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 5)
 # Introduction
 
 This document illustrates the use of sRACIPE to simulate any 
-circuit or network or topology (used interchangeably) and analyze the generated data. 
+circuit or network or topology (used interchangeably) 
+and analyze the generated data. 
 For simplicity, we will start with the toggle switch with mutual inhibition and 
 self activation of both genes as a test case.
 
@@ -87,7 +88,8 @@ kd <- sRACIPE::knockDownAnalysis(rSet, plotToFile = FALSE)
 
 # Plot the network 
 
-The network can be plotted in an interactive viewer or html file in the results  folder.
+The network can be plotted in an interactive viewer 
+or html file in the results  folder.
 
 ```{r eval=FALSE}
  sRACIPE::plotCircuit(rSet, plotToFile = FALSE)
@@ -127,7 +129,8 @@ principal components of the deterministic simulations.
 
 Note that the rSet now contains stochasticSimulations as well as 
 additional elements like umap, pca, assignedClusters. These are 
-added when the data is plotted. As mentioned previously, the stochasticSimulations 
+added when the data is plotted. As mentioned previously, 
+the stochasticSimulations 
 contains two dataframes named "15" and "1.5" which correspond to noise levels. 
 
 
@@ -142,7 +145,8 @@ such that each model converges to its most stable state when the noise is zero.
 
 Using annealing, ideally the number of noise levels should be very large 
 and noiseScalingFactor close to 1 as we want to reduce the noise very slowly. 
-In practice, we found nNoise ~ 30 and initialNoise ~50 divided by sqrt(number_gene) 
+In practice, we found nNoise ~ 30 and 
+initialNoise ~50 divided by sqrt(number_gene) 
 as good starting values. Constant noise and annealing noise simulations pca 
 plots can be used for better approximations of these parameters. 
 The initialNoise should be such that there is a single cluster at this 
@@ -171,7 +175,8 @@ genParams = FALSE and/or genIC = FALSE.
 
 
 ```{r eval=TRUE}
-rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100, plots = FALSE)
+rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100, 
+                             plots = FALSE)
 params <- params(rSet)
 modifiedParams <- as.matrix(params) 
 modifiedParams[,1] <- 0.1*modifiedParams[,1]

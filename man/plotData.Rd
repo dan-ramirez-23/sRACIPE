@@ -70,6 +70,8 @@ Plots heatmap, pca, umap of the data simulated using sRACIPE
 
 \examples{
 data("demoCircuit")
+\dontrun{
 rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100)
 rSet <- plotData(rSet)
+}
 }

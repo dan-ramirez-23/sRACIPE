@@ -63,7 +63,9 @@ range and on a subset of models with high production rate of a specific gene
 
 \examples{
 data("demoCircuit")
+\dontrun{
 rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100,
 plots=FALSE, plotToFile = FALSE)
 rSet <- sRACIPE::normalizeGE(rSet)
+}
 }

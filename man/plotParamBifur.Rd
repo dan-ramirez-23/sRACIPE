@@ -39,9 +39,11 @@ to understand the effect of parameters on the gene expressions.
 }
 \examples{
 data("demoCircuit")
+\dontrun{
 rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100,
 plots=FALSE, plotToFile = FALSE)
 rSet <- sRACIPE::normalizeGE(rSet)
 plotParamBifur(rSet, "G_A")
+}
 
 }

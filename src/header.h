@@ -20,7 +20,10 @@
 extern double Hs_Racipe(double A, double AB0, int n_ab, double lambda_ab);
 extern std::mt19937_64 u_generator;
 extern std::uniform_real_distribution<double> u_distribution;
-
+extern std::mt19937_64 g_generator;
+// Gaussian distributed random number generator with mean 0 and 1
+//standard deviation
+extern std::normal_distribution<double> g_distribution;
 
 // Rcpp::IntegerMatrix readTopology(
 //     Rcpp::IntegerMatrix gene_interaction, const Rcpp::String filepath,

@@ -10,6 +10,9 @@ std::mt19937_64 u_generator (u_seed);
 //uniformly distributed random number generator in (0,1) range
 std::uniform_real_distribution<double> u_distribution(0.0,1.0);
 
+unsigned g_seed = 123456; //
+std::mt19937_64 g_generator (g_seed);
+std::normal_distribution<double> g_distribution(0.0,1.0);
 
 extern double Hs_Racipe(double A, double AB0, int n_ab, double lambda_ab)
 {

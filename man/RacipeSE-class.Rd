@@ -9,7 +9,3 @@
 An S4 class for Random Circuit Perturbation
 simulations of networks. Extends the SummarizedExperiment class
 }
-\seealso{
-\code{\link[SummarizedExperiment]{SummarizedExperiment}} for
-SummarizedExperiment documentation
-}

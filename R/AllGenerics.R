@@ -136,9 +136,11 @@ setGeneric("params",
 #' @param value DataFrame containing the parameteres
 #' @examples
 #' data("demoCircuit")
+#' \dontrun{
 #' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100)
 #' parameters <- params(rSet)
 #' params(rSet) <- parameters
+#' }
 #' @return A RacipeSE object
 
 setGeneric("params<-",
@@ -157,9 +159,11 @@ setGeneric("params<-",
 #' @param .object RacipeSE object
 #' @examples
 #' data("demoCircuit")
+#' \dontrun{
 #' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100)
 #' ics <- ic(rSet)
 #' ic(rSet) <- ics
+#' }
 #' @return DataFrame
 
 setGeneric("ic",
@@ -182,9 +186,11 @@ setGeneric("ic",
 #' @param value DataFrame containing the initial conditions
 #' @examples
 #' data("demoCircuit")
+#' \dontrun{
 #' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100)
 #' ics <- ic(rSet)
 #' ic(rSet) <- ics
+#' }
 #' @return A RacipeSE object
 
 setGeneric("ic<-",
@@ -207,8 +213,10 @@ setGeneric("ic<-",
 #' @return A RacipeSE object
 #' @examples
 #' data("demoCircuit")
+#' \dontrun{
 #' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100)
 #' rSet <- normalizeGE(rSet)
+#' }
 #' @section Related Functions:
 #'
 #' \code{\link{simulateGRC}},  \code{\link{knockDownAnalysis}},
@@ -232,8 +240,10 @@ setGeneric("normalizeGE",
 #' plots to a file.
 #' @examples
 #' data("demoCircuit")
+#' \dontrun{
 #' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100)
 #' plotCircuit(rSet, plotToFile = FALSE)
+#' }
 #' @return circuit plot
 #' @section Related Functions:
 #'
@@ -283,8 +293,10 @@ setGeneric("plotCircuit",
 #' @param ... Other arguments
 #' @examples
 #' data("demoCircuit")
+#' \dontrun{
 #' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100)
 #' rSet <- plotData(rSet)
+#' }
 #' @return \code{RacipeSE} object
 #' @section Related Functions:
 #'
@@ -322,10 +334,12 @@ setGeneric("plotData",
 #' @return none
 #' @examples
 #' data("demoCircuit")
+#' \dontrun{
 #' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100,
 #' plots=FALSE, plotToFile = FALSE)
 #' rSet <- sRACIPE::normalizeGE(rSet)
 #' plotParamBifur(rSet, "G_A")
+#' }
 #'
 setGeneric("plotParamBifur",
            def = function(.object, paramName, data = NULL,
@@ -369,9 +383,11 @@ setGeneric("plotParamBifur",
 #' clusters after marking the models with cluster assignments.
 #' @examples
 #' data("demoCircuit")
+#' \dontrun{
 #' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100,
 #' plots=FALSE, plotToFile = FALSE)
 #' rSet <- sRACIPE::normalizeGE(rSet)
+#' }
 #' @section Related Functions:
 #'
 #' \code{\link{simulateGRC}},  \code{\link{knockDownAnalysis}},
@@ -424,11 +440,13 @@ setGeneric("overExprAnalysis",
 #' clusters after marking the models with cluster assignments.
 #' @examples
 #' data("demoCircuit")
+#' \dontrun{
 #' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100,
 #' plots=FALSE, plotToFile = FALSE)
 #' rSet <- sRACIPE::normalizeGE(rSet)
 #' rSet <- sRACIPE::knockDownAnalysis(rSet, plotToFile = FALSE,
 #' plotBarPlot = TRUE, plotHeatmap = FALSE, reduceProduction = 50)
+#' }
 #'@section Related Functions:
 #'
 #' \code{\link{simulateGRC}},  \code{\link{knockDownAnalysis}},
