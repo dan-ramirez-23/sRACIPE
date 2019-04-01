@@ -57,7 +57,7 @@ RacipeSE object.
 
 ```{r}
 
-rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 10,
+rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100,
                              plots = FALSE)
 
 ```
@@ -113,7 +113,7 @@ stochasticSimulations which is a list of dataframes. Each dataframe contains the
 simulations for one noise level (the name of the dataframe).
 
 ```{r eval=TRUE}
-rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 50, 
+rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100, 
                              initialNoise = 15, noiseScalingFactor = 0.1,
                              nNoise = 2,
                              plots = FALSE, plotToFile = FALSE)
@@ -175,7 +175,7 @@ genParams = FALSE and/or genIC = FALSE.
 
 
 ```{r eval=TRUE}
-rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 10, 
+rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100, 
                              plots = FALSE)
 params <- params(rSet)
 modifiedParams <- as.matrix(params) 
