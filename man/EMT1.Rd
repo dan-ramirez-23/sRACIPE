@@ -4,11 +4,16 @@
 \name{EMT1}
 \alias{EMT1}
 \title{A circuit for epithelial to mesenchymal transition}
-\format{data frame}
+\format{A data frame with 59 rows and 3 variables}
 \usage{
 EMT1
 }
 \description{
-A circuit for epithelial to mesenchymal transition
+This data contains the topology of a 
+circuit with sixteen genes invovled in EMT. 
+For further details,
+see Kohar, V. and Lu, M., Role of noise and parametric 
+variation in the dynamics of gene regulatory circuits, 
+npj Systems Biology and Applications 4, Article number: 40 (2018)
 }
 \keyword{datasets}

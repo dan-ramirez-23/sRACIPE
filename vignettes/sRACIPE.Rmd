@@ -22,22 +22,54 @@ knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 5)
 
 This document illustrates the use of sRACIPE to simulate any 
 circuit or network or topology (used interchangeably) 
-and analyze the generated data. 
-For simplicity, we will start with the toggle switch with mutual inhibition and 
-self activation of both genes as a test case.
+and analyze the generated data. sRACIPE implements a 
+randomization-based method for gene circuit modeling. 
+It allows us to study the effect of both the gene expression noise 
+and the parametric variation on any gene regulatory circuit (GRC) 
+using only its topology, and simulates an ensemble of models 
+with random kinetic parameters at multiple noise levels. 
+Statistical analysis of the generated gene expressions 
+reveals the basin of attraction and stability of various 
+phenotypic states and their changes associated with 
+intrinsic and extrinsic noises. sRACIPE provides a 
+holistic picture to evaluate the effects of both the 
+stochastic nature of cellular processes and the parametric variation. 
+
+## Installation
+1. Download the package from Bioconductor.
+```{r getPackage, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+install.packages("BiocManager")
+BiocManager::install("sRACIPE")
+```
+
+Or install the development version of the package.
+```{r, eval = FALSE}
+BiocManager::install(“vivekkohar/sRACIPE”)
+```
+
+2. Load the package into R session.
+
+```{r Load, message=FALSE}
+library(sRACIPE)
+```
+
+For simplicity, we will start with the toggle switch 
+with mutual inhibition and 
+self activation of both genes as a test case. Additionally,
+to keep the simulations fast, we will use fewer models, 
+small integration time and longer integration step size.
+We recommend using the default settings for most 
+parameters for actual simulations.
 
 # Load the Circuit
-As a first step, set the directory to the desired folder where you want to 
-keep the input topology file and the results. In the working directory 
-("man" in this example), create a folder "inputs" and place the 
-topology (network or circuit) file in that folder or
-load the topology as a dataframe. 
-The typical format of the topology 
+One can use the topology stored in a text file or loaded 
+as a dataframe. The typical format of the topology 
 file is a 3 column file where the first column is name of the source gene, 
 second column is name of the target gene and last column is 
 the interaction type (1 - activation, 2-inhibition). 
 The first line should contain the header (Source Target Interaction). 
-We will work with the a demo circuit from the package.
+We will work with a demo circuit from the package.
 
 ```{r eval=TRUE}
 library(sRACIPE)
@@ -49,27 +81,30 @@ demoCircuit
 ```
 
 # Simulate the circuit
-To simulate the demo circuit, we will first save it to inputs folder and use the
-new file as the input to simulateGRC function. We will use a reduced number of 
+We will use a reduced number of 
 models (using numModels) for demonstration. The simulations will return a 
 RacipeSE object. 
 
 
 ```{r}
 
-rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100,
-                             plots = FALSE)
+rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 20,
+                             plots = FALSE, integrateStepSize = 0.1, 
+                             simulationTime = 30)
 
 ```
 
 # Plotting the simulated data
 
-We can plot the simulated data using the plotData function or using plots=TRUE
-in simulateGRC. The data will be normalized before plotting. By default, two 
+We can plot the simulated data using the sracipePlotData 
+function or using plots=TRUE
+in simulateGRC. The data can be normalized before plotting. 
+Otherwise it will be normalized by the plotting function. By default, two 
 clusters are identified and models colored according to hierarchical clustering.
 
 ```{r eval=TRUE}
-rSet <- sRACIPE::plotData(rSet, plotToFile = FALSE)
+rSet <- sRACIPE::sracipeNormalize(rSet)
+rSet <- sRACIPE::sracipePlotData(rSet, plotToFile = FALSE)
 
 ```
 
@@ -79,11 +114,14 @@ For example, here we will limit a gene's production rate to mimic its knockdown
 and show how that changes the relative proportion of models in different 
 clusters.
 
-```{r eval=FALSE}
+```{r eval=TRUE}
 data("demoCircuit")
 rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, 
-                             numModels = 100, plots = FALSE)
-kd <- sRACIPE::knockDownAnalysis(rSet, plotToFile = FALSE)
+                             numModels = 50, plots = FALSE, 
+                             integrateStepSize = 0.1, 
+                             simulationTime = 30)
+kd <- sRACIPE::sracipeKnockDown(rSet, plotToFile = FALSE,
+                                reduceProduction=50)
 ```
 
 # Plot the network 
@@ -92,7 +130,7 @@ The network can be plotted in an interactive viewer
 or html file in the results  folder.
 
 ```{r eval=FALSE}
- sRACIPE::plotCircuit(rSet, plotToFile = FALSE)
+ sRACIPE::sracipePlotCircuit(rSet, plotToFile = FALSE)
 ```
 
 
@@ -108,15 +146,18 @@ For simulations at one
 noise level only, use nNoise = 1 and set initialNoise parameter to the specific 
 noise. 
 
-Now the returned list will contain an additional element named 
-stochasticSimulations which is a list of dataframes. Each dataframe contains the
-simulations for one noise level (the name of the dataframe).
+Now the returned object will contain additional elements in the 
+assays which correspond to the 
+simulations at different noise levels 
+(noise specified by the name of the element).
 
 ```{r eval=TRUE}
-rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100, 
+rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 20, 
                              initialNoise = 15, noiseScalingFactor = 0.1,
                              nNoise = 2,
-                             plots = FALSE, plotToFile = FALSE)
+                             plots = TRUE, plotToFile = FALSE, 
+                             integrateStepSize = 0.1, 
+                             simulationTime = 30)
 
 ```
 
@@ -127,12 +168,11 @@ clustering heatmap, Umap, PCA) correspond to deterministic data and the last
 two plots contain the data from stochastic simulations projected on the 
 principal components of the deterministic simulations.
 
-Note that the rSet now contains stochasticSimulations as well as 
+Note that the rSet now contains stochastic simulations as well as 
 additional elements like umap, pca, assignedClusters. These are 
 added when the data is plotted. As mentioned previously, 
-the stochasticSimulations 
-contains two dataframes named "15" and "1.5" which correspond to noise levels. 
-
+the additional elements of the assays 
+are named "15" and "1.5" which correspond to noise levels. 
 
 For annealing simulations, one can set anneal=TRUE in the simulateGRC function.
 With anneal=FALSE (constant noise), simulations at different noise levels are 
@@ -175,12 +215,12 @@ genParams = FALSE and/or genIC = FALSE.
 
 
 ```{r eval=TRUE}
-rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100, 
-                             plots = FALSE)
-params <- params(rSet)
+rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 20, 
+                             plots = FALSE, integrate = FALSE)
+params <- sRACIPE::sracipeParams(rSet)
 modifiedParams <- as.matrix(params) 
 modifiedParams[,1] <- 0.1*modifiedParams[,1]
-params(rSet) <- DataFrame(modifiedParams)
+sRACIPE::sracipeParams(rSet) <- DataFrame(modifiedParams)
 rSet <- sRACIPE::simulateGRC(rSet, plots = FALSE, genParams = FALSE)
 
 ```
@@ -205,4 +245,11 @@ unperturbed genes for both the unperturbed simulations as well as the
 perturbed simulations. So for each knockout, we have two plots containing the
 scatter plot of unperturbed simulations and perturbed simulations on the PCs of
 unperturbed simulations (excluding the gene to be perturbed).
+
+
+# Session Information
+
+```{r}
+sessionInfo()
+```
 

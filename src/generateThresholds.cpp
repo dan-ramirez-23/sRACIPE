@@ -10,8 +10,8 @@ size_t generateThresholds(
     Rcpp::NumericVector thresholdGene,
     Rcpp::List config)
 {
-    std::srand(std::time(0));
-    std::mt19937_64 u_generator (std::rand());
+    unsigned int seed =  static_cast<unsigned int>(Rcpp::sample(32000,1,true)(0));
+    std::mt19937_64 u_generator (seed);
     
     NumericVector simulationParameters = as<NumericVector>(config["simParams"]);
     NumericVector stochasticParameters = as<NumericVector>(config["stochParams"]);

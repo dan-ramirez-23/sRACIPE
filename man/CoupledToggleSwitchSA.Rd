@@ -3,12 +3,19 @@
 \docType{data}
 \name{CoupledToggleSwitchSA}
 \alias{CoupledToggleSwitchSA}
-\title{A coupled toggle switch circuit with self activations}
-\format{data frame}
+\title{Five coupled toggle switches}
+\format{A data frame with 18 rows and 3 variables}
 \usage{
 CoupledToggleSwitchSA
 }
 \description{
-A coupled toggle switch circuit with self activations
+This data contains the topology of a 
+circuit with ten genes A1...A5 and B1...B5. 
+Genes with different alphabet inhibit each other 
+whereas genes from different groups activate the other.
+For further details,
+see Kohar, V. and Lu, M., Role of noise and parametric 
+variation in the dynamics of gene regulatory circuits, 
+npj Systems Biology and Applications 4, Article number: 40 (2018)
 }
 \keyword{datasets}

@@ -6,6 +6,8 @@
 \alias{.RacipeSE}
 \title{RacipeSE}
 \description{
-An S4 class for Random Circuit Perturbation
-simulations of networks. Extends the SummarizedExperiment class
+An S4 class for Random Circuit Perturbation (RACIPE)
+simulations of networks. Extends the \link{SummarizedExperiment} class.
+RACIPE can simulate a gene regulatory circuit using the circuit and 
+a large ensemble of parameters.
 }

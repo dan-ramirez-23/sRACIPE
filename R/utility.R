@@ -7,8 +7,8 @@ getInteractions <- function(value) {
     for (i in seq_len(nrow(value))) {
         for (j in seq_len(nrow(value))) {
             if (as.integer(value[i, j]) > 0) {
-                circuitInteractions[interaction, 1] <- geneNames[i]
-                circuitInteractions[interaction, 2] <- geneNames[j]
+                circuitInteractions[interaction, 2] <- geneNames[i]
+                circuitInteractions[interaction, 1] <- geneNames[j]
                 circuitInteractions[interaction, 3] <-
                     as.integer(value[i, j])
                 interaction <- interaction + 1
@@ -25,7 +25,7 @@ getInteractions <- function(value) {
 #' @examples
 #' rSet <- RacipeSE()
 #' data("demoCircuit")
-#' circuit(rSet) <- demoCircuit
+#' sracipeCircuit(rSet) <- demoCircuit
 #' paramNames <- sRACIPE::genParamNames(rSet)
 #'
 #' @return list
@@ -34,7 +34,7 @@ genParamNames <- function(circuit = "inputs/test.tpo") {
         rSet <- circuit
     }  else {
         rSet <- RacipeSE()
-        circuit(rSet) <- circuit
+        sracipeCircuit(rSet) <- circuit
     }
     geneInteraction <- as.matrix(rowData(rSet))
     geneNames <- names(rSet)

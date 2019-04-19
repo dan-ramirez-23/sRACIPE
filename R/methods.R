@@ -1,7 +1,7 @@
 #' @export
-#' @rdname circuit
-#' @aliases circuit
-setMethod(f="circuit",
+#' @rdname sracipeCircuit
+#' @aliases sracipeCircuit
+setMethod(f="sracipeCircuit",
           signature="RacipeSE",
           definition=function(.object)
           {
@@ -10,9 +10,9 @@ setMethod(f="circuit",
             return(circuitInteractions)
           }
 )
-#' @rdname circuit-set
-#' @aliases circuit-set
-setMethod("circuit<-", "RacipeSE",
+#' @rdname sracipeCircuit-set
+#' @aliases sracipeCircuit-set
+setMethod("sracipeCircuit<-", "RacipeSE",
           function(.object, value) {
             circuitTable <- data.frame()
             filename <- character()
@@ -75,9 +75,9 @@ setMethod("circuit<-", "RacipeSE",
           }
 )
 
-#' @rdname config
-#' @aliases config
-setMethod(f="config",
+#' @rdname sracipeConfig
+#' @aliases sracipeConfig
+setMethod(f="sracipeConfig",
           signature="RacipeSE",
           definition=function(.object)
           {
@@ -85,9 +85,9 @@ setMethod(f="config",
           }
 )
 
-#' @rdname config-set
-#' @aliases config-set
-setMethod("config<-", "RacipeSE",
+#' @rdname sracipeConfig-set
+#' @aliases sracipeConfig-set
+setMethod("sracipeConfig<-", "RacipeSE",
           function(.object, value) {
             metadata(.object)$config <- value
             return(.object)
@@ -95,16 +95,16 @@ setMethod("config<-", "RacipeSE",
           }
 )
 
-#' @rdname params
-#' @aliases params
-setMethod("params", signature("RacipeSE"), function(.object) {
+#' @rdname sracipeParams
+#' @aliases sracipeParams
+setMethod("sracipeParams", signature("RacipeSE"), function(.object) {
     return(as.data.frame(colData(.object)[,seq_len(
         2*length(names(.object)) + 3*metadata(.object)$nInteractions)]))
 })
 
-#' @rdname params-set
-#' @aliases params-set
-setMethod(f="params<-",
+#' @rdname sracipeParams-set
+#' @aliases sracipeParams-set
+setMethod(f="sracipeParams<-",
           signature="RacipeSE",
           definition=function(.object, value)
           {
@@ -115,9 +115,9 @@ setMethod(f="params<-",
           }
 
 )
-#' @rdname ic
-#' @aliases ic
-setMethod(f="ic",
+#' @rdname sracipeIC
+#' @aliases sracipeIC
+setMethod(f="sracipeIC",
           signature="RacipeSE",
           definition=function(.object)
           {
@@ -125,9 +125,9 @@ setMethod(f="ic",
               3*metadata(.object)$nInteractions+1):(dim(colData(.object))[2])]))
           }
 )
-#' @rdname ic-set
-#' @aliases ic-set
-setMethod(f="ic<-",
+#' @rdname sracipeIC-set
+#' @aliases sracipeIC-set
+setMethod(f="sracipeIC<-",
           signature="RacipeSE",
           definition=function(.object, value)
           {
@@ -176,9 +176,9 @@ setMethod("annotation<-", signature(object = "RacipeSE"),
               return(object)
               })
 
-#' @rdname normalizeGE
-#' @aliases normalizeGE
-setMethod(f="normalizeGE",
+#' @rdname sracipeNormalize
+#' @aliases sracipeNormalize
+setMethod(f="sracipeNormalize",
           signature="RacipeSE",
           definition=function(.object)
           {
@@ -239,20 +239,19 @@ setMethod(f="normalizeGE",
 )
 
 
-#' @rdname plotCircuit
-#' @aliases plotCircuit
-setMethod(f="plotCircuit",
+#' @rdname sracipePlotCircuit
+#' @aliases sracipePlotCircuit
+setMethod(f="sracipePlotCircuit",
           signature="RacipeSE",
           definition=function(.object, plotToFile = TRUE)
           {
-  topology <- circuit(.object)
+  topology <- sracipeCircuit(.object)
 
   if(plotToFile){
-    if (!dir.exists(file.path(getwd(), "results")))
-      dir.create(file.path(getwd(), "results"))
+
 
     net_file <- paste(getwd(),
-                      "/results/network_",
+                      "/network_",
                       annotation(.object),
                       ".html",
                       sep = "")
@@ -303,9 +302,9 @@ setMethod(f="plotCircuit",
 )
 
 
-#' @rdname plotData
-#' @aliases plotData
-setMethod(f="plotData",
+#' @rdname sracipePlotData
+#' @aliases sracipePlotData
+setMethod(f="sracipePlotData",
           signature="RacipeSE",
           definition=function(.object, plotToFile = TRUE, nClusters = 2,
                               pcaPlot = TRUE, umapPlot = TRUE,
@@ -329,7 +328,7 @@ setMethod(f="plotData",
   i=1;
   koPlot <- list()
   koPlotCounter = 1
-  if(!metadata(.object)$normalized) {.object <- normalizeGE(.object)}
+  if(!metadata(.object)$normalized) {.object <- sracipeNormalize(.object)}
 
   metadataTmp <- metadata(.object)
   assayDataTmp <- assays(.object)
@@ -369,7 +368,7 @@ setMethod(f="plotData",
   names(clustColors) <- assignedClusters
 
   if(plotToFile){
-    fileName <- paste0("results/",annotation(.object),"_heatmap.pdf")
+    fileName <- paste0(annotation(.object),"_heatmap.pdf")
 
     pdf(fileName, onefile = TRUE)
   }
@@ -477,7 +476,7 @@ setMethod(f="plotData",
   }
 
   if(plotToFile){
-    fileName <- paste0("results/",annotation(.object),"_plots.pdf")
+    fileName <- paste0(annotation(.object),"_plots.pdf")
     pdf(fileName, onefile = TRUE)
   }
   for (i in seq(length(p))) {
@@ -491,10 +490,10 @@ setMethod(f="plotData",
   }
   if(!is.null(metadataTmp$stochasticSimulations)){
     if(plotToFile){
-      fileName <- paste0("results/",annotation(.object),"_stochasticPlots.pdf")
+      fileName <- paste0(annotation(.object),"_stochasticPlots.pdf")
       pdf(fileName, onefile = TRUE)
     }
-    for (i in seq(length(stoch))) {
+    for (i in seq_along(stoch)) {
       gridExtra::grid.arrange(stoch[[i]])
       #   do.call("grid.arrange", p[[i]])
     }
@@ -505,7 +504,7 @@ setMethod(f="plotData",
 
   if(!is.null(metadataTmp$knockOutSimulations)){
     if(plotToFile){
-      fileName <- paste0("results/",annotation(.object),"_KO_Plots.pdf")
+      fileName <- paste0(annotation(.object),"_KO_Plots.pdf")
       pdf(fileName, onefile = TRUE)
     }
     for (i in seq(length(koPlot)/2)) {
@@ -519,7 +518,7 @@ setMethod(f="plotData",
 
 
   if(networkPlot){
-    plotCircuit(.object, plotToFile = plotToFile)
+    sracipePlotCircuit(.object, plotToFile = plotToFile)
   }
   metadataTmp$umap <- umapGE
   metadataTmp$pca <- pca1
@@ -530,16 +529,16 @@ setMethod(f="plotData",
 
 )
 
-#' @rdname plotParamBifur
-#' @aliases plotParamBifur
-setMethod(f="plotParamBifur",
+#' @rdname sracipePlotParamBifur
+#' @aliases sracipePlotParamBifur
+setMethod(f="sracipePlotParamBifur",
           signature="RacipeSE",
           definition=function(.object, paramName, data = NULL,
                               paramValue = NULL, assignedClusters = NULL,
                               plotToFile = FALSE){
 
   if(missing(paramValue)){
-    paramValue <- as.matrix(params(.object))
+    paramValue <- as.matrix(sracipeParams(.object))
     paramValue <- paramValue[,paramName]
   }
   if(missing(data)){
@@ -562,7 +561,7 @@ setMethod(f="plotParamBifur",
     assignedClusters <- as.factor(rep(assignedClusters, ncol(data)))
   }
   if(plotToFile){
-    fileName <- paste0("results/",annotation(.object),"_",
+    fileName <- paste0(annotation(.object),"_",
                        paramName,"_BifurPlot.pdf")
     pdf(fileName, onefile = TRUE)
   }
@@ -583,9 +582,9 @@ setMethod(f="plotParamBifur",
 
 )
 
-#' @rdname overExprAnalysis
-#' @aliases overExprAnalysis
-setMethod(f="overExprAnalysis",
+#' @rdname sracipeOverExp
+#' @aliases sracipeOverExp
+setMethod(f="sracipeOverExp",
           signature="RacipeSE",
           definition=function(.object, overProduction = 10,
                               nClusters = 2,
@@ -596,17 +595,17 @@ setMethod(f="overExprAnalysis",
                               clusterCut = NULL,
                               plotToFile = FALSE){
 
-            if(!metadata(.object)$normalized) {.object <- normalizeGE(.object)}
+            if(!metadata(.object)$normalized) {.object <- sracipeNormalize(.object)}
 
               dataSimulation <- assays(.object)[[1]]
               geneNames <- names(.object)
-              params <- params(.object)
+              params <- sracipeParams(.object)
               params <- params[, seq_len(nrow(dataSimulation))]
 
             if (missing(plotFilename))
               plotFilename <- annotation(.object)
             filename <-
-              (paste("results/", plotFilename, "_overExpr.pdf", sep = ""))
+              (paste(plotFilename, "_overExpr.pdf", sep = ""))
 
             #library(htmlwidgets)
             #library(d3heatmap)
@@ -680,7 +679,7 @@ setMethod(f="overExprAnalysis",
                                                          (nClusters)])
               # plot the histogram
               if(plotToFile){
-                pdf(paste("results/", plotFilename, "_overExprBarplot.pdf",
+                pdf(paste(plotFilename, "_overExprBarplot.pdf",
                           sep = ""))
               }
               p <- ggplot2::ggplot(data = meltPKd, aes(x = L1, y = value,
@@ -701,7 +700,7 @@ setMethod(f="overExprAnalysis",
 
             if (plotHeatmap) {
               if(plotToFile){
-                pdf(paste("results/", plotFilename, "_heatmap.pdf", sep = ""))
+                pdf(paste(plotFilename, "_heatmap.pdf", sep = ""))
               }
               gplots::heatmap.2((dataSimulation),
                                 col = plot_color,
@@ -722,9 +721,9 @@ setMethod(f="overExprAnalysis",
           }
 )
 #' @export
-#' @rdname knockDownAnalysis
-#' @aliases knockDownAnalysis
-setMethod(f="knockDownAnalysis",
+#' @rdname sracipeKnockDown
+#' @aliases sracipeKnockDown
+setMethod(f="sracipeKnockDown",
           signature="RacipeSE",
           definition=function(.object, reduceProduction = 10,
                               nClusters = 2,
@@ -734,16 +733,17 @@ setMethod(f="knockDownAnalysis",
                               plotBarPlot = TRUE,
                               clusterCut = NULL,
                               plotToFile = FALSE){
-            if(!metadata(.object)$normalized) {.object <- normalizeGE(.object)}
+            if(!metadata(.object)$normalized) {.object <- sracipeNormalize(.object)}
             dataSimulation <- assays(.object)[[1]]
             geneNames <- names(.object)
-            params <- params(.object)
+            params <- sracipeParams(.object)
             params <- params[, seq_len(nrow(dataSimulation))]
 
             if (missing(plotFilename))
               plotFilename <- annotation(.object)
+            
             filename <-
-              (paste("results/", plotFilename, "_knockdown.pdf", sep = ""))
+              (paste(plotFilename, "_knockdown.pdf", sep = ""))
 
             #library(htmlwidgets)
             #library(d3heatmap)
@@ -829,7 +829,7 @@ setMethod(f="knockDownAnalysis",
                 theme(axis.text.x = element_text(angle = 0, hjust = 1),
                       text = element_text(size = 12))
               if(plotToFile){
-                fileName <- paste("results/", plotFilename, "_kdBarplot.pdf",
+                fileName <- paste(plotFilename, "_kdBarplot.pdf",
                                   sep = "")
                 pdf(fileName, onefile = TRUE)
               }
@@ -843,7 +843,7 @@ setMethod(f="knockDownAnalysis",
 
             if (plotHeatmap) {
               if(plotToFile){
-                pdf(paste("results/", plotFilename, "_heatmap.pdf", sep = ""))
+                pdf(paste(plotFilename, "_heatmap.pdf", sep = ""))
               }
               gplots::heatmap.2((dataSimulation),
                                 col = plot_color,

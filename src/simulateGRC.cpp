@@ -224,8 +224,9 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
               const int stepper = 1)
 
 {
-    std::srand(std::time(0));
-    std::mt19937_64 g_generator (std::rand());
+    unsigned int seed =  static_cast<unsigned int>
+    (Rcpp::sample(32000,1,true)(0));
+    std::mt19937_64 g_generator (seed);
     
   // Initialize the network
   size_t numberGene = geneInteraction.ncol();

@@ -20,7 +20,30 @@ simulateGRC(circuit = "inputs/test.tpo", config = config,
 \arguments{
 \item{circuit}{data.frame or character. The file containing the circuit or}
 
-\item{config}{(optional) data.frame.}
+\item{config}{(optional) List. It contains simulation parameters 
+like integration method
+(stepper) and other lists or vectors like simParams, 
+stochParams, hyperParams, options, thresholds etc. 
+The list simParams contains values for parameters like the 
+number of models (numModels), 
+simulation time (simulationTime), step size for simulations 
+(integrateStepSize), when to start recording the gene expressions 
+(printStart), time interval between recordings (printInterval), number of 
+initial conditions (nIC), output precision (outputPrecision), tolerance for
+adaptive runge kutta method (rkTolerance), parametric variation (paramRange).
+The list stochParams contains the parameters for stochastic simulations like
+the number of noise levels to be simulated (nNoise), the ratio of subsequent
+noise levels (noiseScalingFactor), maximum noise (initialNoise), whether to
+use same noise for all genes or to scale it as per the median expression of
+the genes (scaledNoise), ratio of shot noise to additive noise (shotNoise).
+The list hyperParams contains the parameters like the minimum and maximum 
+production and degration of the genes, fold change, hill coefficient etc.
+The list options includes logical values like annealing (anneal), scaling of 
+noise (scaledNoise), generation of new initial conditions (genIC), parameters
+(genParams) and whether to integrate or not (integrate). The user
+modifiable simulation options can be specified as other arguments. This 
+list should be used if one wants to modify many settings for multiple 
+simulations.}
 
 \item{anneal}{(optional) Logical. Default FALSE. Whether to use annealing
 for stochastic simulations. If TRUE, the gene expressions at higher noise
@@ -89,7 +112,7 @@ TRUE the noise in each gene will be proportional to its expression levels.}
 
 \item{outputPrecision}{(optional) integer. Default 12.
 The decimal point precison of
-the output to be printed in the tmp folder.}
+the output.}
 
 \item{printStart}{(optional) numeric (0-\code{simulationTime}).
  Default \code{simulationTime}
@@ -151,8 +174,8 @@ only input. It will generate an ensemble of random models.
 \section{Related Functions}{
 
 
-\code{\link{simulateGRC}},  \code{\link{knockDownAnalysis}},
-\code{\link{overExprAnalysis}},  \code{\link{plotData}}
+\code{\link{simulateGRC}},  \code{\link{sracipeKnockDown}},
+\code{\link{sracipeOverExp}},  \code{\link{sracipePlotData}}
 }
 
 \examples{

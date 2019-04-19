@@ -7,7 +7,30 @@
 #' @description Simulate a gene regulatory circuit using its topology as the
 #' only input. It will generate an ensemble of random models.
 #' @param circuit data.frame or character. The file containing the circuit or
-#' @param config  (optional) data.frame.
+#' @param config  (optional) List. It contains simulation parameters 
+#' like integration method
+#' (stepper) and other lists or vectors like simParams, 
+#' stochParams, hyperParams, options, thresholds etc. 
+#' The list simParams contains values for parameters like the 
+#' number of models (numModels), 
+#' simulation time (simulationTime), step size for simulations 
+#' (integrateStepSize), when to start recording the gene expressions 
+#' (printStart), time interval between recordings (printInterval), number of 
+#' initial conditions (nIC), output precision (outputPrecision), tolerance for
+#' adaptive runge kutta method (rkTolerance), parametric variation (paramRange).
+#' The list stochParams contains the parameters for stochastic simulations like
+#' the number of noise levels to be simulated (nNoise), the ratio of subsequent
+#' noise levels (noiseScalingFactor), maximum noise (initialNoise), whether to
+#' use same noise for all genes or to scale it as per the median expression of
+#' the genes (scaledNoise), ratio of shot noise to additive noise (shotNoise).
+#' The list hyperParams contains the parameters like the minimum and maximum 
+#' production and degration of the genes, fold change, hill coefficient etc.
+#' The list options includes logical values like annealing (anneal), scaling of 
+#' noise (scaledNoise), generation of new initial conditions (genIC), parameters
+#' (genParams) and whether to integrate or not (integrate). The user
+#' modifiable simulation options can be specified as other arguments. This 
+#' list should be used if one wants to modify many settings for multiple 
+#' simulations.
 #' @param anneal (optional) Logical. Default FALSE. Whether to use annealing
 #' for stochastic simulations. If TRUE, the gene expressions at higher noise
 #' are used as initial conditions for simulations at lower noise.
@@ -54,7 +77,7 @@
 #' TRUE the noise in each gene will be proportional to its expression levels.
 #' @param outputPrecision (optional) integer. Default 12.
 #' The decimal point precison of
-#' the output to be printed in the tmp folder.
+#' the output.
 #' @param knockOut (optional) List of character or vector of characters.
 #' Simulation after knocking out one or more genes. To knock out all the genes
 #' in the circuit, use \code{knockOut = "all"}. If it is a vector, then all
@@ -101,8 +124,8 @@
 #' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit)
 #' @section Related Functions:
 #'
-#' \code{\link{simulateGRC}},  \code{\link{knockDownAnalysis}},
-#' \code{\link{overExprAnalysis}},  \code{\link{plotData}}
+#' \code{\link{simulateGRC}},  \code{\link{sracipeKnockDown}},
+#' \code{\link{sracipeOverExp}},  \code{\link{sracipePlotData}}
 #'
 
 simulateGRC <- function( circuit="inputs/test.tpo", config = config,
@@ -134,7 +157,7 @@ simulateGRC <- function( circuit="inputs/test.tpo", config = config,
   }
    if((methods::is(circuit,"character")) | (methods::is(circuit, "data.frame")))
   {
-    circuit(rSet) <- circuit
+    sracipeCircuit(rSet) <- circuit
     if(methods::is(circuit, "data.frame")){
       metadataTmp$annotation <- deparse(substitute(circuit))
       metadataTmp$nInteractions <- length(circuit[,1])
@@ -292,12 +315,6 @@ if(!missing(config)){
         configuration$hyperParams["foldChangeMin"])*
     configuration$simParams["paramRange"]/100
 
-
-  results_directory <- ifelse(!dir.exists(file.path(getwd(), "results")),
-                              dir.create(file.path(getwd(), "results")), TRUE)
-  results_directory <- ifelse(!dir.exists(file.path(getwd(), "tmp")),
-                              dir.create(file.path(getwd(), "tmp")), TRUE)
-
   nGenes <- length(rSet)
   geneInteraction <- as.matrix(rowData(rSet))
 
@@ -316,7 +333,7 @@ if(!missing(config)){
     geneInteraction,  thresholdGene,  configuration)
   configuration$thresholds <- thresholdGene
   if(threshold_test!=0){
-    print("Error in threshold generation")
+    stop("Error in threshold generation")
     }
   } else {
 
@@ -324,7 +341,7 @@ if(!missing(config)){
     message("Please specify the parameters as genParams is FALSE")
     return(rSet)
   } else {
-    params <- as.data.frame(params(rSet))
+    params <- as.data.frame(sracipeParams(rSet))
 
     utils::write.table(params, file = outFileParams,
                 sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
@@ -337,7 +354,7 @@ if(!missing(config)){
               as genIC is FALSE")
       return(rSet)
     } else {
-      ic <- as.data.frame(ic(rSet))
+      ic <- as.data.frame(sracipeIC(rSet))
       utils::write.table(ic, file = outFileIC,
                   sep = "\t", quote = FALSE, row.names = FALSE,
                   col.names = FALSE)
@@ -372,7 +389,7 @@ if(missing(nNoise)){
   Time_evolution_test<- simulateGRCCpp(geneInteraction, configuration,outFileGE,
                                        outFileParams,outFileIC, stepperInt)
 
-    if(integrate){
+    if(configuration$options["integrate"]){
   #  geFile <- paste0("tmp/",outFile,"_geneExpression.txt")
     geneExpression <- utils::read.table(outFileGE, header = FALSE)
     if(configuration$stochParams["nNoise"] == 0){
@@ -427,15 +444,15 @@ if(missing(nNoise)){
         knockOutData <- knockOut
         names(knockOutData) <- knockOut
 
-        for(ko in seq_len(length(knockOut))){
+        for(ko in seq_along(knockOut)){
           koGene <- knockOut[[ko]]
           knockOut_number <- which(koGene==geneNames)
           if(length(knockOut_number)==0){
             message("knockOut gene not found in the circuit")
             return(rSet)
           }
-          params <- params(rSet)
-          ic <- ic(rSet)
+          params <- sracipeParams(rSet)
+          ic <- sracipeIC(rSet)
           ic[,knockOut_number] <- 0
           params[,knockOut_number] <- 0
 
@@ -462,6 +479,21 @@ if(missing(nNoise)){
 
   }
     }
+  else {
+      paramName <- genParamNames(rSet)
+      parameters <- utils::read.table(outFileParams, header = FALSE)
+      colnames(parameters) <- paramName
+      
+      ic <- utils::read.table(outFileIC, header = FALSE)
+      colnames(ic) <- geneNames
+      colData <- (cbind(parameters,ic))
+      metadataTmp$config <- configuration
+      rSet <- RacipeSE(rowData = geneInteraction, colData = colData,
+                       
+                       metadata = metadataTmp)
+      return(rSet)
+  }
+  
     colData <- (cbind(parameters,ic))
     metadataTmp$config <- configuration
  # return(list(rowData = geneInteraction, colData = colData,
@@ -472,10 +504,9 @@ if(missing(nNoise)){
                      metadata = metadataTmp)
 ##############################
  if(plots){
-    rSet <- plotData(rSet,plotToFile = plotToFile,...)
+    rSet <- sracipePlotData(rSet,plotToFile = plotToFile,...)
   }
 
-#    saveRDS(rSet, file = paste0("results/",outFile,".RDS"))
 return(rSet)
 }
 

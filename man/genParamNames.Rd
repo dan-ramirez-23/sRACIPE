@@ -18,7 +18,7 @@ Generate parameter names for a circuit
 \examples{
 rSet <- RacipeSE()
 data("demoCircuit")
-circuit(rSet) <- demoCircuit
+sracipeCircuit(rSet) <- demoCircuit
 paramNames <- sRACIPE::genParamNames(rSet)
 
 }
