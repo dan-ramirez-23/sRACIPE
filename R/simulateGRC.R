@@ -34,9 +34,9 @@
 #' @param anneal (optional) Logical. Default FALSE. Whether to use annealing
 #' for stochastic simulations. If TRUE, the gene expressions at higher noise
 #' are used as initial conditions for simulations at lower noise.
-#' @param numModels (optional) Integer. Default 500. Number of random models
+#' @param numModels (optional) Integer. Default 2000. Number of random models
 #' to be simulated.
-#' @param thresholdModels (optional)  integer. Default 10000. The number of
+#' @param thresholdModels (optional)  integer. Default 5000. The number of
 #' models to be used for calculating the thresholds for genes.
 #' @param paramRange (optional) numeric (0-100). Default 100. The relative
 #' range of parameters (production rate, degradation rate, fold change).
@@ -82,14 +82,14 @@
 #' Simulation after knocking out one or more genes. To knock out all the genes
 #' in the circuit, use \code{knockOut = "all"}. If it is a vector, then all
 #' the genes in the vector will be knocked out simultaneously.
-#' @param printStart (optional) numeric (0-\code{simulationTime}).
-#'  Default \code{simulationTime}
+#' @param printStart (optional) numeric (0-\code{simulationTime}). 
+#' Default \code{simulationTime}. Its use should be avoided. 
 #' The time from which the output should be recorded. Useful for time series
 #' analysis and studying the dynamics of a model for a particular initial
-#' condition.
+#' condition. 
 #' @param printInterval (optional) numeric (\code{integrateStepSize}-
 #' \code{simulationTime - printStart}). Default 10. The separation between
-#' two recorded time points.
+#' two recorded time points for a given trajectory.
 #' @param stepper (optional) Character. Stepper to be used for integrating the
 #' differential equations. The options include \code{"EM"} for Euler-Maruyama
 #' O(1), \code{"RK4"}
@@ -98,7 +98,7 @@
 #'  for deterministic
 #' simulations and the method defaults to \code{"EM"}
 #' for stochastic simulations.
-#' @param plots (optional) logical Default \code{TRUE}.
+#' @param plots (optional) logical Default \code{FALSE}.
 #' Whether to plot the simuated data.
 #' @param plotToFile (optional) Default \code{FALSE}. Whether to save the plots
 #' to a file.
@@ -129,7 +129,7 @@
 #'
 
 sracipeSimulate <- function( circuit="inputs/test.tpo", config = config,
-                      anneal=FALSE, knockOut = NA_character_,numModels=500,
+                      anneal=FALSE, knockOut = NA_character_,numModels=2000,
                       paramRange=100,
                       prodRateMin=1.,prodRateMax=100, degRateMin=0.1,
                       degRateMax=1.,foldChangeMin=1,foldChangeMax=100,
@@ -137,16 +137,16 @@ sracipeSimulate <- function( circuit="inputs/test.tpo", config = config,
                       simulationTime=50.0,nIC=1L,nNoise=0L,
                       initialNoise=50.0,noiseScalingFactor=0.5,shotNoise=0,
                       scaledNoise=FALSE,outputPrecision=12L,
-                       printStart = 50.0,
+                      printStart = 50.0,
                       printInterval=10, stepper = "RK4",
-                      thresholdModels = 10000, plots = FALSE, plotToFile = TRUE,
+                      thresholdModels = 5000, plots = FALSE, 
+                      plotToFile = FALSE,
                       genIC = TRUE, genParams = TRUE,
                       integrate = TRUE, rkTolerance = 0.01, ...){
  rSet <- RacipeSE()
  metadataTmp <- metadata(rSet)
  configData <- NULL
-    data("configData",envir = environment())
-  # configuration <- sRACIPE:::configData
+ data("configData",envir = environment())
  configuration <- configData
   if(methods::is(circuit,"RacipeSE"))
   {

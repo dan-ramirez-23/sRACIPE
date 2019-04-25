@@ -5,7 +5,7 @@
 \title{Simulate a gene regulatory circuit}
 \usage{
 sracipeSimulate(circuit = "inputs/test.tpo", config = config,
-  anneal = FALSE, knockOut = NA_character_, numModels = 500,
+  anneal = FALSE, knockOut = NA_character_, numModels = 2000,
   paramRange = 100, prodRateMin = 1, prodRateMax = 100,
   degRateMin = 0.1, degRateMax = 1, foldChangeMin = 1,
   foldChangeMax = 100, hillCoeffMin = 1L, hillCoeffMax = 6L,
@@ -13,7 +13,7 @@ sracipeSimulate(circuit = "inputs/test.tpo", config = config,
   nNoise = 0L, initialNoise = 50, noiseScalingFactor = 0.5,
   shotNoise = 0, scaledNoise = FALSE, outputPrecision = 12L,
   printStart = 50, printInterval = 10, stepper = "RK4",
-  thresholdModels = 10000, plots = FALSE, plotToFile = TRUE,
+  thresholdModels = 5000, plots = FALSE, plotToFile = FALSE,
   genIC = TRUE, genParams = TRUE, integrate = TRUE,
   rkTolerance = 0.01, ...)
 }
@@ -54,7 +54,7 @@ Simulation after knocking out one or more genes. To knock out all the genes
 in the circuit, use \code{knockOut = "all"}. If it is a vector, then all
 the genes in the vector will be knocked out simultaneously.}
 
-\item{numModels}{(optional) Integer. Default 500. Number of random models
+\item{numModels}{(optional) Integer. Default 2000. Number of random models
 to be simulated.}
 
 \item{paramRange}{(optional) numeric (0-100). Default 100. The relative
@@ -114,15 +114,15 @@ TRUE the noise in each gene will be proportional to its expression levels.}
 The decimal point precison of
 the output.}
 
-\item{printStart}{(optional) numeric (0-\code{simulationTime}).
- Default \code{simulationTime}
+\item{printStart}{(optional) numeric (0-\code{simulationTime}). 
+Default \code{simulationTime}. Its use should be avoided. 
 The time from which the output should be recorded. Useful for time series
 analysis and studying the dynamics of a model for a particular initial
 condition.}
 
 \item{printInterval}{(optional) numeric (\code{integrateStepSize}-
 \code{simulationTime - printStart}). Default 10. The separation between
-two recorded time points.}
+two recorded time points for a given trajectory.}
 
 \item{stepper}{(optional) Character. Stepper to be used for integrating the
 differential equations. The options include \code{"EM"} for Euler-Maruyama
@@ -133,10 +133,10 @@ Dormand-Prince algorithm. The default method is \code{"RK4"}
 simulations and the method defaults to \code{"EM"}
 for stochastic simulations.}
 
-\item{thresholdModels}{(optional)  integer. Default 10000. The number of
+\item{thresholdModels}{(optional)  integer. Default 5000. The number of
 models to be used for calculating the thresholds for genes.}
 
-\item{plots}{(optional) logical Default \code{TRUE}.
+\item{plots}{(optional) logical Default \code{FALSE}.
 Whether to plot the simuated data.}
 
 \item{plotToFile}{(optional) Default \code{FALSE}. Whether to save the plots
