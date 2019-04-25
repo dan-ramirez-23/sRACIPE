@@ -146,7 +146,7 @@ setMethod(f="sracipeIC<-",
 #' @examples
 #'
 #' data("demoCircuit")
-#' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100)
+#' rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 100)
 #' ann <- annotation(rSet)
 #' annotation(rSet) <- ann
 #'
@@ -166,7 +166,7 @@ setMethod("annotation", signature(object = "RacipeSE"), function(object,...) {
 #' @param ... Additional arguments, for use in specific methods.
 #' @examples
 #' data("demoCircuit")
-#' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100)
+#' rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 100)
 #' ann <- annotation(rSet)
 #' annotation(rSet) <- ann
 #' @return A RacipeSE object

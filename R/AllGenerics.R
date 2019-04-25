@@ -51,7 +51,7 @@ setGeneric(name="sracipeCircuit",
 #' rm(RacipeSet, demoCircuit)
 #' @section Related Functions:
 #'
-#' \code{\link{simulateGRC}},  \code{\link{sracipeKnockDown}},
+#' \code{\link{sracipeSimulate}},  \code{\link{sracipeKnockDown}},
 #' \code{\link{sracipeOverExp}},  \code{\link{sracipePlotData}}
 #'
 
@@ -115,7 +115,7 @@ setGeneric("sracipeConfig<-",
 #' @param .object RacipeSE object
 #' @examples
 #' data("demoCircuit")
-#' RacipeSet <- simulateGRC(demoCircuit, integrate = FALSE, numModels=20)
+#' RacipeSet <- sracipeSimulate(demoCircuit, integrate = FALSE, numModels=20)
 #' parameters <- sracipeParams(RacipeSet)
 #' sracipeParams(RacipeSet) <- parameters
 #' rm(parameters,RacipeSet)
@@ -136,7 +136,7 @@ setGeneric("sracipeParams",
 #' @param value DataFrame containing the parameteres
 #' @examples
 #' data("demoCircuit")
-#' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 20, 
+#' rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 20, 
 #' integrate = FALSE)
 #' parameters <- sracipeParams(rSet)
 #' sracipeParams(rSet) <- parameters
@@ -159,7 +159,7 @@ setGeneric("sracipeParams<-",
 #' @param .object RacipeSE object
 #' @examples
 #' data("demoCircuit")
-#' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 20, 
+#' rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 20, 
 #' integrate=FALSE)
 #' ics <- sracipeIC(rSet)
 #' rm(rSet,ics)
@@ -181,7 +181,7 @@ setGeneric("sracipeIC",
 #' @param value DataFrame containing the initial conditions
 #' @examples
 #' data("demoCircuit")
-#' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 10, 
+#' rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 10, 
 #' integrate=FALSE)
 #' ics <- sracipeIC(rSet)
 #' sracipeIC(rSet) <- ics
@@ -207,12 +207,12 @@ setGeneric("sracipeIC<-",
 #' @return A RacipeSE object
 #' @examples
 #' data("demoCircuit")
-#' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 20,
+#' rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 20,
 #' integrateStepSize = 0.1, simulationTime = 30)
 #' rSet <- sracipeNormalize(rSet)
 #' @section Related Functions:
 #'
-#' \code{\link{simulateGRC}},  \code{\link{sracipeKnockDown}},
+#' \code{\link{sracipeSimulate}},  \code{\link{sracipeKnockDown}},
 #' \code{\link{sracipeOverExp}},  \code{\link{sracipePlotData}},
 #'
 setGeneric("sracipeNormalize",
@@ -228,13 +228,13 @@ setGeneric("sracipeNormalize",
 #' @title Plot Gene Regulatory Circuit
 #' @description  Plot Gene Regulatory Circuit to a file or output device.
 #' @param .object RacipeSE object
-#' A list returned by \code{\link{simulateGRC}} function
+#' A list returned by \code{\link{sracipeSimulate}} function
 #' @param plotToFile (optional) logical. Default \code{FALSE}. Whether to save
 #' plots to a file.
 #' @examples
 #' data("demoCircuit")
 #' \dontrun{
-#' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 20,
+#' rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 20,
 #' integrateStepSize = 0.1, simulationTime = 30)
 #' sracipePlotCircuit(rSet, plotToFile = FALSE)
 #' rm(rSet)
@@ -242,7 +242,7 @@ setGeneric("sracipeNormalize",
 #' @return circuit plot
 #' @section Related Functions:
 #'
-#' \code{\link{simulateGRC}},  \code{\link{sracipeKnockDown}},
+#' \code{\link{sracipeSimulate}},  \code{\link{sracipeKnockDown}},
 #' \code{\link{sracipeOverExp}},  \code{\link{sracipePlotData}}
 setGeneric("sracipePlotCircuit",
            def = function(.object, plotToFile = FALSE)
@@ -261,7 +261,7 @@ setGeneric("sracipePlotCircuit",
 #' @import grDevices
 #' @title Plot sRACIPE data
 #' @description Plots heatmap, pca, umap of the data simulated using sRACIPE
-#' @param  .object List A list returned by \code{\link{simulateGRC}} function
+#' @param  .object List A list returned by \code{\link{sracipeSimulate}} function
 #' @param plotToFile (optional) logical. Default \code{FALSE}. Whether to save
 #' plots to a file.
 #' @param nClusters (optional) Integer. Default 2. Expected number of clusters
@@ -289,14 +289,14 @@ setGeneric("sracipePlotCircuit",
 #' @examples
 #' data("demoCircuit")
 #' \dontrun{
-#' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 20,
+#' rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 20,
 #' integrateStepSize = 0.1, simulationTime = 30)
 #' rSet <- sracipePlotData(rSet)
 #' }
 #' @return \code{RacipeSE} object
 #' @section Related Functions:
 #'
-#' \code{\link{simulateGRC}},  \code{\link{sracipeKnockDown}},
+#' \code{\link{sracipeSimulate}},  \code{\link{sracipeKnockDown}},
 #' \code{\link{sracipeOverExp}},  \code{\link{sracipePlotData}},
 setGeneric("sracipePlotData",
            def = function(.object, plotToFile = FALSE, nClusters = 2,
@@ -317,7 +317,7 @@ setGeneric("sracipePlotData",
 #' @description Plot the expression of the genes against parameter values
 #' to understand the effect of parameters on the gene expressions.
 #' @param .object RacipeSE object generated by
-#' \code{\link{simulateGRC}} function.
+#' \code{\link{sracipeSimulate}} function.
 #' @param paramName character. The name of the parameter to be plotted.
 #' @param plotToFile (optional) logical. Default \code{FALSE}. Whether to save
 #' plots to a file.
@@ -331,7 +331,7 @@ setGeneric("sracipePlotData",
 #' @examples
 #' data("demoCircuit")
 #' \dontrun{
-#' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100,
+#' rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 100,
 #' plots=FALSE, plotToFile = FALSE)
 #' rSet <- sRACIPE::sracipeNormalize(rSet)
 #' sracipePlotParamBifur(rSet, "G_A")
@@ -357,7 +357,7 @@ setGeneric("sracipePlotParamBifur",
 #' range and on a subset of models with high production rate of a specific gene
 #'  representing the over expression of the specific gene.
 #' @param .object RacipeSE object generated by
-#' \code{\link{simulateGRC}} function.
+#' \code{\link{sracipeSimulate}} function.
 #' @param clusterOfInterest (optional) cluster number (integer)
 #' to be used for arranging
 #' the transcription factors
@@ -380,13 +380,13 @@ setGeneric("sracipePlotParamBifur",
 #' @examples
 #' data("demoCircuit")
 #' \dontrun{
-#' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100,
+#' rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 100,
 #' plots=FALSE, plotToFile = FALSE)
 #' rSet <- sRACIPE::sracipeNormalize(rSet)
 #' }
 #' @section Related Functions:
 #'
-#' \code{\link{simulateGRC}},  \code{\link{sracipeKnockDown}},
+#' \code{\link{sracipeSimulate}},  \code{\link{sracipeKnockDown}},
 #' \code{\link{sracipeOverExp}},  \code{\link{sracipePlotData}},
 setGeneric("sracipeOverExp",
            def = function(.object, overProduction = 10,
@@ -413,7 +413,7 @@ setGeneric("sracipeOverExp",
 #' with full parameter
 #' range and on a subset of models with low production rate of a specific gene
 #'  representing the knockdown of the specific gene.
-#' @param .object RacipeSE object generated by \code{\link{simulateGRC}}
+#' @param .object RacipeSE object generated by \code{\link{sracipeSimulate}}
 #'  function.
 #' @param clusterOfInterest (optional) cluster number (integer)
 #' to be used for arranging
@@ -437,7 +437,7 @@ setGeneric("sracipeOverExp",
 #' @examples
 #' data("demoCircuit")
 #' \dontrun{
-#' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100,
+#' rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 100,
 #' plots=FALSE, plotToFile = FALSE)
 #' rSet <- sRACIPE::sracipeNormalize(rSet)
 #' rSet <- sRACIPE::sracipeKnockDown(rSet, plotToFile = FALSE,
@@ -445,7 +445,7 @@ setGeneric("sracipeOverExp",
 #' }
 #'@section Related Functions:
 #'
-#' \code{\link{simulateGRC}},  \code{\link{sracipeKnockDown}},
+#' \code{\link{sracipeSimulate}},  \code{\link{sracipeKnockDown}},
 #' \code{\link{sracipeOverExp}},  \code{\link{sracipePlotData}}
 #'
 setGeneric("sracipeKnockDown",

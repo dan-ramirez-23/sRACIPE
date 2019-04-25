@@ -21,7 +21,7 @@ processes and the parametric variation.
 \section{sRACIPE functions}{
 
 
-\code{\link{simulateGRC}}
+\code{\link{sracipeSimulate}}
 Primary function to simulate a circuit.
  Contains options for plotting as well.
 \code{\link{sracipeKnockDown}}
@@ -39,7 +39,7 @@ clustering analysis, principal components, and uniform manifold
 approximation and projection. Can plot the stochastic as well as the
 knockout simulations.
 
-\code{\link{simulateGRC}},  \code{\link{sracipeKnockDown}},
+\code{\link{sracipeSimulate}},  \code{\link{sracipeKnockDown}},
 \code{\link{sracipeOverExp}},  \code{\link{sracipePlotData}}
 }
 

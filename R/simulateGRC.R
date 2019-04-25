@@ -121,14 +121,14 @@
 #' simulated gene expressions, and simulation configuration.
 #' @examples
 #' data("demoCircuit")
-#' rSet <- sRACIPE::simulateGRC(circuit = demoCircuit)
+#' rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit)
 #' @section Related Functions:
 #'
-#' \code{\link{simulateGRC}},  \code{\link{sracipeKnockDown}},
+#' \code{\link{sracipeSimulate}},  \code{\link{sracipeKnockDown}},
 #' \code{\link{sracipeOverExp}},  \code{\link{sracipePlotData}}
 #'
 
-simulateGRC <- function( circuit="inputs/test.tpo", config = config,
+sracipeSimulate <- function( circuit="inputs/test.tpo", config = config,
                       anneal=FALSE, knockOut = NA_character_,numModels=500,
                       paramRange=100,
                       prodRateMin=1.,prodRateMax=100, degRateMin=0.1,
@@ -424,7 +424,7 @@ if(missing(nNoise)){
 
     }
 
-    paramName <- genParamNames(rSet)
+    paramName <- sracipeGenParamNames(rSet)
     # paramFile <- paste0("tmp/",outFile,"_parameters.txt")
     parameters <- utils::read.table(outFileParams, header = FALSE)
     colnames(parameters) <- paramName
@@ -480,7 +480,7 @@ if(missing(nNoise)){
   }
     }
   else {
-      paramName <- genParamNames(rSet)
+      paramName <- sracipeGenParamNames(rSet)
       parameters <- utils::read.table(outFileParams, header = FALSE)
       colnames(parameters) <- paramName
       

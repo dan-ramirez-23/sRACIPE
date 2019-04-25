@@ -23,13 +23,13 @@ expressions for stochastic and knockout simulations
 \section{Related Functions}{
 
 
-\code{\link{simulateGRC}},  \code{\link{sracipeKnockDown}},
+\code{\link{sracipeSimulate}},  \code{\link{sracipeKnockDown}},
 \code{\link{sracipeOverExp}},  \code{\link{sracipePlotData}},
 }
 
 \examples{
 data("demoCircuit")
-rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 20,
+rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 20,
 integrateStepSize = 0.1, simulationTime = 30)
 rSet <- sracipeNormalize(rSet)
 }

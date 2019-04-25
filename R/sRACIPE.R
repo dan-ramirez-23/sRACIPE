@@ -16,7 +16,7 @@
 #'
 #' @section sRACIPE functions:
 #'
-#' \code{\link{simulateGRC}}
+#' \code{\link{sracipeSimulate}}
 #' Primary function to simulate a circuit.
 #'  Contains options for plotting as well.
 #' \code{\link{sracipeKnockDown}}
@@ -34,7 +34,7 @@
 #' approximation and projection. Can plot the stochastic as well as the
 #' knockout simulations.
 #'
-#' \code{\link{simulateGRC}},  \code{\link{sracipeKnockDown}},
+#' \code{\link{sracipeSimulate}},  \code{\link{sracipeKnockDown}},
 #' \code{\link{sracipeOverExp}},  \code{\link{sracipePlotData}}
 #'
 #' @import visNetwork reshape2 ggplot2 gplots MASS RColorBrewer

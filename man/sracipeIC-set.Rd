@@ -24,7 +24,7 @@ Set the initial conditions
 }
 \examples{
 data("demoCircuit")
-rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 10, 
+rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 10, 
 integrate=FALSE)
 ics <- sracipeIC(rSet)
 sracipeIC(rSet) <- ics

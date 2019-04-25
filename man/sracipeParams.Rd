@@ -21,7 +21,7 @@ The parameters for each model.
 }
 \examples{
 data("demoCircuit")
-RacipeSet <- simulateGRC(demoCircuit, integrate = FALSE, numModels=20)
+RacipeSet <- sracipeSimulate(demoCircuit, integrate = FALSE, numModels=20)
 parameters <- sracipeParams(RacipeSet)
 sracipeParams(RacipeSet) <- parameters
 rm(parameters,RacipeSet)

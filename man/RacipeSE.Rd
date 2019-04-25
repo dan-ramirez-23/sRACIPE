@@ -7,7 +7,7 @@
 RacipeSE(...)
 }
 \arguments{
-\item{...}{Arguments passed to}
+\item{...}{Arguments passed to SummarizedExperiment}
 }
 \value{
 RacipeSE object
@@ -67,7 +67,7 @@ The list options includes logical values like annealing (anneal), scaling of
 noise (scaledNoise), generation of new initial conditions (genIC), parameters
 (genParams) and whether to integrate or not (integrate). The user
 modifiable simulation options can be specified as arguments to 
-\code{\link{simulateGRC}} function.
+\code{\link{sracipeSimulate}} function.
 }
 \examples{
 rSet <- RacipeSE()

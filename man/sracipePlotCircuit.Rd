@@ -12,7 +12,7 @@ sracipePlotCircuit(.object, plotToFile = FALSE)
 }
 \arguments{
 \item{.object}{RacipeSE object
-A list returned by \code{\link{simulateGRC}} function}
+A list returned by \code{\link{sracipeSimulate}} function}
 
 \item{plotToFile}{(optional) logical. Default \code{FALSE}. Whether to save
 plots to a file.}
@@ -26,14 +26,14 @@ Plot Gene Regulatory Circuit to a file or output device.
 \section{Related Functions}{
 
 
-\code{\link{simulateGRC}},  \code{\link{sracipeKnockDown}},
+\code{\link{sracipeSimulate}},  \code{\link{sracipeKnockDown}},
 \code{\link{sracipeOverExp}},  \code{\link{sracipePlotData}}
 }
 
 \examples{
 data("demoCircuit")
 \dontrun{
-rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 20,
+rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 20,
 integrateStepSize = 0.1, simulationTime = 30)
 sracipePlotCircuit(rSet, plotToFile = FALSE)
 rm(rSet)

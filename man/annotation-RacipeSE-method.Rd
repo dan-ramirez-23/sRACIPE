@@ -21,7 +21,7 @@ A method to get the annotation
 \examples{
 
 data("demoCircuit")
-rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 100)
+rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 100)
 ann <- annotation(rSet)
 annotation(rSet) <- ann
 

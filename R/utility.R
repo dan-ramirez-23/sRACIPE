@@ -26,10 +26,10 @@ getInteractions <- function(value) {
 #' rSet <- RacipeSE()
 #' data("demoCircuit")
 #' sracipeCircuit(rSet) <- demoCircuit
-#' paramNames <- sRACIPE::genParamNames(rSet)
+#' paramNames <- sRACIPE::sracipeGenParamNames(rSet)
 #'
 #' @return list
-genParamNames <- function(circuit = "inputs/test.tpo") {
+sracipeGenParamNames <- function(circuit = "inputs/test.tpo") {
     if (methods::is(circuit, "RacipeSE")) {
         rSet <- circuit
     }  else {

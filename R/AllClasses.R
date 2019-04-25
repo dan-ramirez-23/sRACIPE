@@ -67,7 +67,7 @@
 #' noise (scaledNoise), generation of new initial conditions (genIC), parameters
 #' (genParams) and whether to integrate or not (integrate). The user
 #' modifiable simulation options can be specified as arguments to 
-#' \code{\link{simulateGRC}} function.
+#' \code{\link{sracipeSimulate}} function.
 #'    
 #' @import SummarizedExperiment
 #' @importFrom S4Vectors metadata

@@ -24,7 +24,7 @@ Set the parameters
 }
 \examples{
 data("demoCircuit")
-rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 20, 
+rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 20, 
 integrate = FALSE)
 parameters <- sracipeParams(rSet)
 sracipeParams(rSet) <- parameters

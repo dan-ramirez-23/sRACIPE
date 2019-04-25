@@ -18,7 +18,7 @@ sracipePlotData(.object, plotToFile = FALSE, nClusters = 2,
   corMethod = "spearman", ...)
 }
 \arguments{
-\item{.object}{List A list returned by \code{\link{simulateGRC}} function}
+\item{.object}{List A list returned by \code{\link{sracipeSimulate}} function}
 
 \item{plotToFile}{(optional) logical. Default \code{FALSE}. Whether to save
 plots to a file.}
@@ -64,14 +64,14 @@ Plots heatmap, pca, umap of the data simulated using sRACIPE
 \section{Related Functions}{
 
 
-\code{\link{simulateGRC}},  \code{\link{sracipeKnockDown}},
+\code{\link{sracipeSimulate}},  \code{\link{sracipeKnockDown}},
 \code{\link{sracipeOverExp}},  \code{\link{sracipePlotData}},
 }
 
 \examples{
 data("demoCircuit")
 \dontrun{
-rSet <- sRACIPE::simulateGRC(circuit = demoCircuit, numModels = 20,
+rSet <- sRACIPE::sracipeSimulate(circuit = demoCircuit, numModels = 20,
 integrateStepSize = 0.1, simulationTime = 30)
 rSet <- sracipePlotData(rSet)
 }

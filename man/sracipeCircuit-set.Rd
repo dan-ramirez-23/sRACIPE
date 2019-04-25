@@ -35,7 +35,7 @@ Here the regulation type is specified by number - activation: \code{1},
 \section{Related Functions}{
 
 
-\code{\link{simulateGRC}},  \code{\link{sracipeKnockDown}},
+\code{\link{sracipeSimulate}},  \code{\link{sracipeKnockDown}},
 \code{\link{sracipeOverExp}},  \code{\link{sracipePlotData}}
 }
 
