@@ -15,7 +15,7 @@ sracipeSimulate(circuit = "inputs/test.tpo", config = config,
   printStart = 50, printInterval = 10, stepper = "RK4",
   thresholdModels = 5000, plots = FALSE, plotToFile = FALSE,
   genIC = TRUE, genParams = TRUE, integrate = TRUE,
-  rkTolerance = 0.01, ...)
+  rkTolerance = 0.01, timeSeries = FALSE, ...)
 }
 \arguments{
 \item{circuit}{data.frame or character. The file containing the circuit or}
@@ -115,14 +115,17 @@ The decimal point precison of
 the output.}
 
 \item{printStart}{(optional) numeric (0-\code{simulationTime}). 
-Default \code{simulationTime}. Its use should be avoided. 
+Default \code{simulationTime}. To be used only when \code{timeSeries} is 
+\code{TRUE}.
 The time from which the output should be recorded. Useful for time series
 analysis and studying the dynamics of a model for a particular initial
 condition.}
 
 \item{printInterval}{(optional) numeric (\code{integrateStepSize}-
 \code{simulationTime - printStart}). Default 10. The separation between
-two recorded time points for a given trajectory.}
+two recorded time points for a given trajectory. 
+To be used only when \code{timeSeries} is 
+\code{TRUE}.}
 
 \item{stepper}{(optional) Character. Stepper to be used for integrating the
 differential equations. The options include \code{"EM"} for Euler-Maruyama
@@ -161,11 +164,18 @@ rate and initial condition to zero.}
 \item{rkTolerance}{(optional) numeric. Default \code{0.01}. Error tolerance
 for adaptive integration method.}
 
+\item{timeSeries}{(optional) logical. Default \code{FALSE}. 
+Whether to generate time series for a single model instead of performing
+RACIPE simulations.}
+
 \item{...}{Other arguments}
 }
 \value{
-List. A list containing the circuit, parameters, initial conditions,
-simulated gene expressions, and simulation configuration.
+\code{RacipeSE} object. RacipeSE class inherits 
+\code{SummarizedExperiment} and contains the circuit, parameters, 
+initial conditions,
+simulated gene expressions, and simulation configuration. These can be 
+accessed using correponding getters.
 }
 \description{
 Simulate a gene regulatory circuit using its topology as the

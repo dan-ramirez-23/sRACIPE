@@ -75,6 +75,17 @@ setMethod("sracipeCircuit<-", "RacipeSE",
           }
 )
 
+#' @export
+#' @rdname sracipeGetTS
+#' @aliases sracipeGetTS
+setMethod(f="sracipeGetTS",
+          signature="RacipeSE",
+          definition=function(.object)
+          {
+            return(metadata(.object)$timeSeries)
+          }
+)
+
 #' @rdname sracipeConfig
 #' @aliases sracipeConfig
 setMethod(f="sracipeConfig",
@@ -98,8 +109,8 @@ setMethod("sracipeConfig<-", "RacipeSE",
 #' @rdname sracipeParams
 #' @aliases sracipeParams
 setMethod("sracipeParams", signature("RacipeSE"), function(.object) {
-    return(as.data.frame(colData(.object)[,seq_len(
-        2*length(names(.object)) + 3*metadata(.object)$nInteractions)]))
+    return(as(colData(.object)[,seq_len(
+        2*length(names(.object)) + 3*metadata(.object)$nInteractions),drop=FALSE], "data.frame"))
 })
 
 #' @rdname sracipeParams-set
@@ -307,6 +318,7 @@ setMethod(f="sracipePlotCircuit",
 setMethod(f="sracipePlotData",
           signature="RacipeSE",
           definition=function(.object, plotToFile = TRUE, nClusters = 2,
+                              heatmapPlot = TRUE,
                               pcaPlot = TRUE, umapPlot = TRUE,
                               networkPlot = TRUE,
                               clustMethod = "ward.D2", col = col,
@@ -328,6 +340,7 @@ setMethod(f="sracipePlotData",
   i=1;
   koPlot <- list()
   koPlotCounter = 1
+  koHeatmap <- list()
   if(!metadata(.object)$normalized) {.object <- sracipeNormalize(.object)}
 
   metadataTmp <- metadata(.object)
@@ -372,15 +385,19 @@ setMethod(f="sracipePlotData",
 
     pdf(fileName, onefile = TRUE)
   }
-  gplots::heatmap.2((assayDataTmp[[1]]),
+  if(heatmapPlot) {
+    gplots::heatmap.2((assayDataTmp[[1]]),
                     Colv = ddCol,
                     Rowv = ddRow,
                     trace = "none",
                     col = col,
                     ColSideColors = clustColors
-  )
+    )
+  }
 
-  if(plotToFile){
+
+    if(plotToFile){
+    
     dev.off()
   }
   V1 <- NULL
@@ -397,8 +414,9 @@ setMethod(f="sracipePlotData",
             panel.background = element_rect(fill = "white", color = "black"),
             panel.grid.major = element_line(color="gray", size=0.25))
     #  panel.border = element_rect(color = "black"))
+    i <- i+1
   }
-  i <- i+1
+ 
   if(pcaPlot){
 
     pca1 = summary(prcomp(t(assayDataTmp[[1]]), scale. = FALSE))
@@ -410,6 +428,7 @@ setMethod(f="sracipePlotData",
       theme(text = element_text(size=30),
             panel.background = element_rect(fill = "white", color = "black"),
             panel.grid.major = element_line(color="gray", size=0.25))
+  
     if(!is.null(metadataTmp$stochasticSimulations)){
       stochasticPca <- assayDataTmp[
         2:(1+length(metadataTmp$stochasticSimulations))]
@@ -431,19 +450,25 @@ setMethod(f="sracipePlotData",
       }
 
     }
+  }
     if(!is.null(metadataTmp$knockOutSimulations)){
       knockOutSimulations <- assayDataTmp[
         (2+length(metadataTmp$stochasticSimulations)):
           (1+length(metadataTmp$stochasticSimulations) +
              length(metadataTmp$knockOutSimulations))]
+      if(plotToFile){
+        fileName <- paste0(annotation(.object),"_KO_heatmaps.pdf")
+        pdf(fileName, onefile = TRUE)
+      }
       for(ko in seq_len(length(knockOutSimulations))){
 
         simData <- knockOutSimulations[[ko]]
         geneExpression <- assayDataTmp[[1]]
         tmpGene <- names(knockOutSimulations[ko])
-        simData <- simData[-which(names(simData) == tmpGene),]
-        geneExpression <- geneExpression[-which(names(geneExpression) ==
+        simData <- simData[-which(rownames(simData) == tmpGene),]
+        geneExpression <- geneExpression[-which(rownames(geneExpression) ==
                                                   tmpGene),]
+        if(pcaPlot){
         pcaKo <- summary(prcomp(t(geneExpression), scale. = FALSE))
         koPlot[[koPlotCounter]] <-
           ggplot2::ggplot(data = as.data.frame(pcaKo$x)) +
@@ -469,19 +494,33 @@ setMethod(f="sracipePlotData",
                                                 color = "black"),
                 panel.grid.major = element_line(color="gray", size=0.25))
         koPlotCounter <- koPlotCounter + 1
-
+        }
+        if(heatmapPlot){
+ 
+          gplots::heatmap.2(
+            geneExpression, trace = "none", col = col, main = "WT",
+            hclustfun = function(x) hclust(x, method = 'ward.D2'),
+            distfun=function(x) as.dist((1-cor(t(x), method = "spear"))/2)
+          )
+          gplots::heatmap.2(
+            simData, trace = "none", col = col, 
+            main = names(knockOutSimulations[ko]),
+            hclustfun = function(x) hclust(x, method = 'ward.D2'),
+            distfun=function(x) as.dist((1-cor(t(x), method = "spear"))/2)
+          )
+        }
       }
-
+      if(heatmapPlot) dev.off()
     }
-  }
 
   if(plotToFile){
     fileName <- paste0(annotation(.object),"_plots.pdf")
     pdf(fileName, onefile = TRUE)
   }
+    
   for (i in seq(length(p))) {
-    gridExtra::grid.arrange(p[[i]])
-    #   do.call("grid.arrange", p[[i]])
+     gridExtra::grid.arrange(p[[i]])
+    # do.call("grid.arrange", p[[i]])
   }
 
   if(plotToFile){
@@ -520,8 +559,8 @@ setMethod(f="sracipePlotData",
   if(networkPlot){
     sracipePlotCircuit(.object, plotToFile = plotToFile)
   }
-  metadataTmp$umap <- umapGE
-  metadataTmp$pca <- pca1
+  if(umapPlot)metadataTmp$umap <- umapGE
+  if(pcaPlot) metadataTmp$pca <- pca1
   metadataTmp$assignedClusters <- assignedClusters
   metadata(.object) <- metadataTmp
   return(.object)
