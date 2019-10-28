@@ -394,7 +394,7 @@ circuitVariables$circuit <- read.table(
   })
   
   
-  output$downloadCircuit <- downloadHandler(
+output$downloadCircuit <- downloadHandler(
     filename = function() {
       if(is.null(circuitVariables$rSet)) return("circuit.tpo")
       paste(annotation(circuitVariables$rSet), '.tpo', sep='')
