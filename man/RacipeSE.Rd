@@ -4,7 +4,14 @@
 \alias{RacipeSE}
 \title{RacipeSE constructor}
 \usage{
-RacipeSE(...)
+RacipeSE(
+  .object = NULL,
+  assays = SimpleList(),
+  rowData = NULL,
+  colData = DataFrame(),
+  metadata = list(),
+  ...
+)
 }
 \arguments{
 \item{...}{Arguments passed to SummarizedExperiment}

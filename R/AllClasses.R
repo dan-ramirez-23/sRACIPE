@@ -70,7 +70,7 @@
 #' \code{\link{sracipeSimulate}} function.
 #'    
 #' @import SummarizedExperiment
-#' @importFrom S4Vectors metadata
+#' @importFrom S4Vectors metadata DataFrame isEmpty
 #' @importFrom utils data
 #' @param ... Arguments passed to SummarizedExperiment
 #' @return RacipeSE object
