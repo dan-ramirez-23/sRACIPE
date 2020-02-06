@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sRACIPE</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.3</span>
       </span>
     </div>
 
@@ -86,36 +86,6 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/articles/GeneEx_About_Circuit.html">Circuit</a>
-    </li>
-    <li>
-      <a href="../articles/articles/GeneEx_About_Database.html">Database</a>
-    </li>
-    <li>
-      <a href="../articles/articles/GeneEx_About_GeneVyuha.html">GeneVyuha</a>
-    </li>
-    <li>
-      <a href="../articles/articles/GeneEx_About_Overview.html">Overview</a>
-    </li>
-    <li>
-      <a href="../articles/articles/GeneEx_About_RACIPE.html">RACIPE</a>
-    </li>
-    <li>
-      <a href="../articles/articles/GeneEx_About_Theory.html">Theory</a>
-    </li>
-    <li>
-      <a href="../articles/articles/GeneEx_About_Validate.html">Validate</a>
-    </li>
-  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -147,18 +117,38 @@
     <p>Plots heatmap, pca, umap of the data simulated using sRACIPE</p>
     </div>
 
-    <pre class="usage"><span class='fu'>sracipePlotData</span>(<span class='no'>.object</span>, <span class='kw'>plotToFile</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>nClusters</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>heatmapPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>pcaPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>umapPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>networkPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>clustMethod</span> <span class='kw'>=</span> <span class='st'>"ward.D2"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='no'>col</span>,
-  <span class='kw'>distType</span> <span class='kw'>=</span> <span class='st'>"euclidean"</span>, <span class='kw'>assignedClusters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>corMethod</span> <span class='kw'>=</span> <span class='st'>"spearman"</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>sracipePlotData</span>(
+  <span class='no'>.object</span>,
+  <span class='kw'>plotToFile</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>nClusters</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>heatmapPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>pcaPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>umapPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>networkPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>clustMethod</span> <span class='kw'>=</span> <span class='st'>"ward.D2"</span>,
+  <span class='kw'>col</span> <span class='kw'>=</span> <span class='no'>col</span>,
+  <span class='kw'>distType</span> <span class='kw'>=</span> <span class='st'>"euclidean"</span>,
+  <span class='kw'>assignedClusters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>corMethod</span> <span class='kw'>=</span> <span class='st'>"spearman"</span>,
+  <span class='no'>...</span>
+)
 
 <span class='co'># S4 method for RacipeSE</span>
-<span class='fu'>sracipePlotData</span>(<span class='no'>.object</span>, <span class='kw'>plotToFile</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>nClusters</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>heatmapPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>pcaPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>umapPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>networkPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>clustMethod</span> <span class='kw'>=</span> <span class='st'>"ward.D2"</span>,
-  <span class='kw'>col</span> <span class='kw'>=</span> <span class='no'>col</span>, <span class='kw'>distType</span> <span class='kw'>=</span> <span class='st'>"euclidean"</span>, <span class='kw'>assignedClusters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>corMethod</span> <span class='kw'>=</span> <span class='st'>"spearman"</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>sracipePlotData</span>(
+  <span class='no'>.object</span>,
+  <span class='kw'>plotToFile</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>nClusters</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>heatmapPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>pcaPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>umapPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>networkPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>clustMethod</span> <span class='kw'>=</span> <span class='st'>"ward.D2"</span>,
+  <span class='kw'>col</span> <span class='kw'>=</span> <span class='no'>col</span>,
+  <span class='kw'>distType</span> <span class='kw'>=</span> <span class='st'>"euclidean"</span>,
+  <span class='kw'>assignedClusters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>corMethod</span> <span class='kw'>=</span> <span class='st'>"spearman"</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
