@@ -22,3 +22,8 @@ library(devtools)
 
 install_github(“vivekkohar/sRACIPE”)
 
+Build Reports
+------
+
+- [![Bioconductor Release](https://bioconductor.org/shields/build/release/bioc/sRACIPE.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/sRACIPE/) – Bioconductor Release
+- [![Bioconductor devel](https://bioconductor.org/shields/build/devel/bioc/sRACIPE.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/sRACIPE/) – Bioconductor devel
