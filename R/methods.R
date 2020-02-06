@@ -32,6 +32,16 @@ setMethod("sracipeCircuit<-", "RacipeSE",
               }
             }
             if(is(value, "data.frame")){
+              if(dim(value)[2]!=3) 
+              {
+                message("Incorrect number of columns in circuit")
+                return()
+                }
+              storage.mode(value[,3]) <- "integer"
+              if(sum(!(value[,3] %in% c(1,2)))>0){
+                message("Incorrect interactions (only 1,2 allowed)")
+                return()
+              } 
               circuitTable <- value
               colnames(circuitTable) <- c("Source","Target","Type")
               filename <- deparse(substitute(value))}
@@ -61,14 +71,18 @@ setMethod("sracipeCircuit<-", "RacipeSE",
               circuitAdjMat[circuitTable[i,2], circuitTable[i,1]] <-
                 circuitTable[i,3]
             }
-
+            configData <- NULL
+            data("configData",envir = environment(), package = "sRACIPE")
+            
+            
             .object <- RacipeSE(
-              assay = matrix(data = NA,nrow = nGenes,ncol = nGenes),
-              rowData <- circuitAdjMat,
+              assays = SimpleList(matrix(NA, nrow = nGenes,ncol = configData$simParams["numModels"])),
+              rowData = DataFrame(circuitAdjMat),
+              colData = DataFrame(matrix(NA,nrow = configData$simParams["numModels"],ncol=0)),
                                  metadata = list(
                                    annotation = filename,
                                    nInteractions = nInteraction,
-                                   config = metadata(.object)$config)
+                                   config = configData)
                                  )
             message("circuit file successfully loaded")
             return(.object)
@@ -132,8 +146,8 @@ setMethod(f="sracipeIC",
           signature="RacipeSE",
           definition=function(.object)
           {
-            return(as.data.frame(colData(.object)[,(2*length(names(.object)) +
-              3*metadata(.object)$nInteractions+1):(dim(colData(.object))[2])]))
+            return(t(as.data.frame(colData(.object)[,(2*length(names(.object)) +
+              3*metadata(.object)$nInteractions+1):(dim(colData(.object))[2])])))
           }
 )
 #' @rdname sracipeIC-set
@@ -142,6 +156,7 @@ setMethod(f="sracipeIC<-",
           signature="RacipeSE",
           definition=function(.object, value)
           {
+            value <- t(value)
             colData(.object)[,(2*length(names(.object)) +
         3*metadata(.object)$nInteractions +1):
             (dim(colData(.object))[2])] <- S4Vectors::DataFrame(value)
@@ -205,6 +220,22 @@ setMethod(f="sracipeNormalize",
 #  geneExpression <- data.frame(geneExpression)
 #  assayDataTmp2 <- list(deterministic = geneExpression)
 
+  tsSims <- 0
+  if(!is.null(metadata(.object)$tsSimulations)){
+    tsSims <- length(metadata(.object)$tsSimulations)
+    tsSimulations <- assayDataTmp[2:(tsSims + 1)]
+    tsSimulations <- lapply(tsSimulations,function(x) (1+x))
+    tsSimulations <- lapply(tsSimulations,log2)
+    #   stochasticSimulations <-
+    #      lapply(stochasticSimulations, function(x) x[,is.finite(colMeans(x))])
+    
+    tsSimulations <- lapply(tsSimulations,
+                            function(x) sweep(x, 1, means, FUN = "-"))
+    tsSimulations <- lapply(tsSimulations,
+                            function(x) sweep(x, 1, sds, FUN = "/"))
+    assayDataTmp2 <- c(assayDataTmp2, tsSimulations)
+  }
+  
   stochSims <- 0
   if(!is.null(metadata(.object)$stochasticSimulations)){
     stochSims <- length(metadata(.object)$stochasticSimulations)
@@ -221,6 +252,8 @@ setMethod(f="sracipeNormalize",
     assayDataTmp2 <- c(assayDataTmp2, stochasticSimulations)
   }
 
+
+  
   if(!is.null(metadata(.object)$knockOutSimulations)){
     knockOutSimulations <- .object$knockOutSimulations
     koSims <- length(metadata(.object)$knockOutSimulations)
@@ -335,8 +368,11 @@ setMethod(f="sracipePlotData",
   col2 <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
             "#D55E00", "#CC79A7")
   p <- list()
+  ts <- list()
+  tsCounter <- 1
+  
   stoch <- list()
-  stochCounter <- 1
+
   i=1;
   koPlot <- list()
   koPlotCounter = 1
@@ -428,6 +464,28 @@ setMethod(f="sracipePlotData",
       theme(text = element_text(size=30),
             panel.background = element_rect(fill = "white", color = "black"),
             panel.grid.major = element_line(color="gray", size=0.25))
+    
+    if(!is.null(metadataTmp$tsSimulations)){
+      tsPca <- assayDataTmp[
+        2:(1+length(metadataTmp$tsSimulations))]
+      for(j in seq_len(length(tsPca))){
+        tsPca[[j]] <-
+          t(scale(t(tsPca[[j]]), pca1$center, pca1$scale) %*%
+              pca1$rotation)
+        
+        ts[[j]] <-
+          ggplot2::ggplot(data = as.data.frame(t(tsPca[[j]]))) +
+          geom_point(aes(x = PC1, y=PC2), shape = 1) +
+          labs(x = paste0("PC1(",100*pca1$importance[2,1],"%)"),
+               y=paste0("PC2(",100*pca1$importance[2,2],"%)"),
+               title = names(metadataTmp$tsSimulations)[j]) +
+          theme(text = element_text(size=30),
+                panel.background = element_rect(fill = "white",
+                                                color = "black"),
+                panel.grid.major = element_line(color="gray", size=0.25))
+      }
+      
+    }
   
     if(!is.null(metadataTmp$stochasticSimulations)){
       stochasticPca <- assayDataTmp[
@@ -524,9 +582,23 @@ setMethod(f="sracipePlotData",
   }
 
   if(plotToFile){
-    message("Plots in the pdf file in the results folder.")
+    message("Plots saved as pdf files in the working directory.")
     dev.off()
   }
+    if(!is.null(metadataTmp$tsSimulations)){
+      if(plotToFile){
+        fileName <- paste0(annotation(.object),"_tsPlots.pdf")
+        pdf(fileName, onefile = TRUE)
+      }
+      for (i in seq_along(ts)) {
+        gridExtra::grid.arrange(ts[[i]])
+        #   do.call("grid.arrange", p[[i]])
+      }
+      if(plotToFile){
+        dev.off()
+      }
+    }
+    
   if(!is.null(metadataTmp$stochasticSimulations)){
     if(plotToFile){
       fileName <- paste0(annotation(.object),"_stochasticPlots.pdf")
