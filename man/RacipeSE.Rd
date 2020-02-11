@@ -14,7 +14,17 @@ RacipeSE(
 )
 }
 \arguments{
+\item{.object}{(optional) Another RacipeSE object.}
+
+\item{rowData}{(optional) rowData for initialization}
+
+\item{colData}{(optional) colData for initialization}
+
+\item{metadata}{(optional) metadata for initialization}
+
 \item{...}{Arguments passed to SummarizedExperiment}
+
+\item{assay}{(optional) assay object for initialization}
 }
 \value{
 RacipeSE object

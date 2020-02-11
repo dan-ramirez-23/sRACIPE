@@ -72,6 +72,11 @@
 #' @import SummarizedExperiment
 #' @importFrom S4Vectors metadata DataFrame isEmpty
 #' @importFrom utils data
+#' @param .object (optional) Another RacipeSE object.
+#' @param assays (optional) assay object for initialization
+#' @param rowData (optional) rowData for initialization
+#' @param colData (optional) colData for initialization
+#' @param metadata (optional) metadata for initialization 
 #' @param ... Arguments passed to SummarizedExperiment
 #' @return RacipeSE object
 #' @examples
