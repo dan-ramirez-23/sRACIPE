@@ -32,6 +32,7 @@ setMethod("sracipeCircuit<-", "RacipeSE",
               }
             }
             if(is(value, "data.frame")){
+              filename <- deparse(substitute(value))
               if(dim(value)[2]!=3) 
               {
                 message("Incorrect number of columns in circuit")
@@ -44,7 +45,7 @@ setMethod("sracipeCircuit<-", "RacipeSE",
               } 
               circuitTable <- value
               colnames(circuitTable) <- c("Source","Target","Type")
-              filename <- deparse(substitute(value))}
+              }
             }
             else{
               stop("Incorrect circuit!
@@ -350,7 +351,7 @@ setMethod(f="sracipePlotCircuit",
 #' @aliases sracipePlotData
 setMethod(f="sracipePlotData",
           signature="RacipeSE",
-          definition=function(.object, plotToFile = TRUE, nClusters = 2,
+          definition=function(.object, plotToFile = FALSE, nClusters = 2,
                               heatmapPlot = TRUE,
                               pcaPlot = TRUE, umapPlot = TRUE,
                               networkPlot = TRUE,

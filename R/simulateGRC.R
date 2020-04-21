@@ -125,6 +125,9 @@
 #' @param timeSeries (optional) logical. Default \code{FALSE}. 
 #' Whether to generate time series for a single model instead of performing
 #' RACIPE simulations. 
+#' @param nCores (optional) integer. Default \code{1}
+#' Number of cores to be used for computation. Utilizes \code{multiprocess} from 
+#' \link{doFuture} pacakge. Will not work in Rstudio.
 #' @return \code{RacipeSE} object. RacipeSE class inherits 
 #' \code{SummarizedExperiment} and contains the circuit, parameters, 
 #' initial conditions,
@@ -153,14 +156,16 @@ sracipeSimulate <- function( circuit="inputs/test.tpo", config = config,
                       thresholdModels = 5000, plots = FALSE, 
                       plotToFile = FALSE,
                       genIC = TRUE, genParams = TRUE,
-                      integrate = TRUE, rkTolerance = 0.01, timeSeries = FALSE, 
-                      ...){
+                      integrate = TRUE, rkTolerance = 0.01, timeSeries = FALSE,
+                      nCores = 1L,
+                      ...) {
  rSet <- RacipeSE()
  metadataTmp <- metadata(rSet)
  configData <- NULL
  data("configData",envir = environment(), package = "sRACIPE")
  configuration <- configData
  
+
   if(methods::is(circuit,"RacipeSE"))
   {
 
@@ -197,150 +202,157 @@ if(!missing(config)){
      knockOut <- list(knockOut)
    }
  }
-
-  if(!missing(anneal)){
-    #print("test1")
- if(anneal)
-      configuration$options["anneal"] <- anneal
+if(nCores<1) {
+  warning("Number of cores, nCores, is less than 1 or not an interger. 
+          Using nCores=1")
+  nCores=1
   }
-  if(!missing(numModels)){
-    configuration$simParams["numModels"] <- numModels
-  }
-
-  if(!missing(paramRange)){
-    configuration$simParams["paramRange"] <- paramRange
-  }
-  if(!missing(prodRateMin)){
-    configuration$hyperParams["prodRateMin"] <- prodRateMin
-  }
-  if(!missing(prodRateMax)){
-    configuration$hyperParams["prodRateMax"] <- prodRateMax
-  }
-
-  if(!missing(degRateMin)){
-    configuration$hyperParams["degRateMin"] <- degRateMin
-  }
-  if(!missing(degRateMax)){
-    configuration$hyperParams["degRateMax"] <- degRateMax
-  }
-  if(!missing(foldChangeMin)){
-    configuration$hyperParams["foldChangeMin"] <- foldChangeMin
-  }
-  if(!missing(foldChangeMax)){
-    configuration$hyperParams["foldChangeMax"] <- foldChangeMax
-  }
-  if(!missing(hillCoeffMin)){
-    configuration$hyperParams["hillCoeffMin"] <- hillCoeffMin
-  }
-  if(!missing(hillCoeffMax)){
-    configuration$hyperParams["hillCoeffMax"] <- hillCoeffMax
-  }
-  if(!missing(integrateStepSize)){
-    configuration$simParams["integrateStepSize"] <- integrateStepSize
-  }
-  if(!missing(simulationTime)){
-    configuration$simParams["simulationTime"] <- simulationTime
-  }
+ if(!missing(anneal)){
+   #print("test1")
+   if(anneal)
+     configuration$options["anneal"] <- anneal
+ }
+ if(!missing(numModels)){
+   configuration$simParams["numModels"] <- numModels
+ }
+ 
+ if(!missing(paramRange)){
+   configuration$simParams["paramRange"] <- paramRange
+ }
+ if(!missing(prodRateMin)){
+   configuration$hyperParams["prodRateMin"] <- prodRateMin
+ }
+ if(!missing(prodRateMax)){
+   configuration$hyperParams["prodRateMax"] <- prodRateMax
+ }
+ 
+ if(!missing(degRateMin)){
+   configuration$hyperParams["degRateMin"] <- degRateMin
+ }
+ if(!missing(degRateMax)){
+   configuration$hyperParams["degRateMax"] <- degRateMax
+ }
+ if(!missing(foldChangeMin)){
+   configuration$hyperParams["foldChangeMin"] <- foldChangeMin
+ }
+ if(!missing(foldChangeMax)){
+   configuration$hyperParams["foldChangeMax"] <- foldChangeMax
+ }
+ if(!missing(hillCoeffMin)){
+   configuration$hyperParams["hillCoeffMin"] <- hillCoeffMin
+ }
+ if(!missing(hillCoeffMax)){
+   configuration$hyperParams["hillCoeffMax"] <- hillCoeffMax
+ }
+ if(!missing(integrateStepSize)){
+   configuration$simParams["integrateStepSize"] <- integrateStepSize
+ }
+ if(!missing(simulationTime)){
+   configuration$simParams["simulationTime"] <- simulationTime
+ }
  if(!missing(simDet)){
    configuration$options["simDet"] <- simDet
  } else {
    configuration$options["simDet"] <- TRUE
  }
-  if(!missing(nIC)){
-    configuration$simParams["nIC"] <- nIC
-  }
-  if(!missing(outputPrecision)){
-    configuration$simParams["outputPrecision"] <- outputPrecision
-  }
-
-  if(!missing(nNoise)){
-    configuration$stochParams["nNoise"] <- nNoise
-  }
-  if(!missing(initialNoise)){
-    configuration$stochParams["initialNoise"] <- initialNoise
-  }
-  if(!missing(noiseScalingFactor)){
-    configuration$stochParams["noiseScalingFactor"] <- noiseScalingFactor
-  }
-  if(!missing(shotNoise)){
-    configuration$stochParams["shotNoise"] <- shotNoise
-  }
-  if(!missing(scaledNoise)){
-    configuration$options["scaledNoise"] <-scaledNoise
-  }
-  if(!missing(printStart)){
-    configuration$simParams["printStart"] <- printStart
-  }
-  if(!missing(printInterval)){
-    configuration$simParams["printInterval"] <- printInterval
-    if(configuration$simParams["printInterval"] <
-       configuration$simParams["integrateStepSize"]){
-      configuration$simParams["printInterval"] <-
-      configuration$simParams["integrateStepSize"] 
-      warnings("Print Interval cannot be smaller than integration step size. 
-               Setting it to integrate step size.")}
-  }
-
+ if(!missing(nIC)){
+   configuration$simParams["nIC"] <- nIC
+ }
+ if(!missing(outputPrecision)){
+   configuration$simParams["outputPrecision"] <- outputPrecision
+ }
+ 
+ if(!missing(nNoise)){
+   configuration$stochParams["nNoise"] <- nNoise
+ }
+ if(!missing(initialNoise)){
+   configuration$stochParams["initialNoise"] <- initialNoise
+ }
+ if(!missing(noiseScalingFactor)){
+   configuration$stochParams["noiseScalingFactor"] <- noiseScalingFactor
+ }
+ if(!missing(shotNoise)){
+   configuration$stochParams["shotNoise"] <- shotNoise
+ }
+ if(!missing(scaledNoise)){
+   configuration$options["scaledNoise"] <-scaledNoise
+ }
+ if(!missing(printStart)){
+   configuration$simParams["printStart"] <- printStart
+ }
+ if(!missing(printInterval)){
+   configuration$simParams["printInterval"] <- printInterval
+   if(configuration$simParams["printInterval"] <
+      configuration$simParams["integrateStepSize"]){
+     configuration$simParams["printInterval"] <-
+       configuration$simParams["integrateStepSize"] 
+     warnings("Print Interval cannot be smaller than integration step size. 
+              Setting it to integrate step size.")}
+   }
+ 
  if(!missing(genIC)){
    configuration$options["genIC"] <- genIC
  }
-
+ 
  if(!missing(genParams)){
    configuration$options["genParams"] <- genParams
  }
-# stepper is not included in configdata. This can be changed
- configuration$stepper <- stepper
-
+ 
  if(!missing(integrate)){
    configuration$options["integrate"] <- integrate
  }
  if(missing(printStart)){
-  configuration$simParams["printStart"] <-
-    configuration$simParams["simulationTime"]
+   configuration$simParams["printStart"] <-
+     configuration$simParams["simulationTime"]
  }
  if(!missing(rkTolerance)){
    configuration$simParams["rkTolerance"] <- rkTolerance
  }
  
  # Apply parameter range
-  configuration$hyperParams["prodRateMin"] <- 0.5*(
-    configuration$hyperParams["prodRateMin"] +
-      configuration$hyperParams["prodRateMax"]) - 0.5*(
-      configuration$hyperParams["prodRateMax"] -
-        configuration$hyperParams["prodRateMin"])*
-    configuration$simParams["paramRange"]/100
-  configuration$hyperParams["prodRateMax"] <- 0.5*(
-    configuration$hyperParams["prodRateMin"] +
-      configuration$hyperParams["prodRateMax"]) + 0.5*(
-      configuration$hyperParams["prodRateMax"] -
-        configuration$hyperParams["prodRateMin"])*
-    configuration$simParams["paramRange"]/100
+ configuration$hyperParams["prodRateMin"] <- 0.5*(
+   configuration$hyperParams["prodRateMin"] +
+     configuration$hyperParams["prodRateMax"]) - 0.5*(
+       configuration$hyperParams["prodRateMax"] -
+         configuration$hyperParams["prodRateMin"])*
+   configuration$simParams["paramRange"]/100
+ configuration$hyperParams["prodRateMax"] <- 0.5*(
+   configuration$hyperParams["prodRateMin"] +
+     configuration$hyperParams["prodRateMax"]) + 0.5*(
+       configuration$hyperParams["prodRateMax"] -
+         configuration$hyperParams["prodRateMin"])*
+   configuration$simParams["paramRange"]/100
+ 
+ configuration$hyperParams["degRateMin"] <- 0.5*(
+   configuration$hyperParams["degRateMin"] +
+     configuration$hyperParams["degRateMax"]) - 0.5*(
+       configuration$hyperParams["degRateMax"] -
+         configuration$hyperParams["degRateMin"])*
+   configuration$simParams["paramRange"]/100
+ configuration$hyperParams["degRateMax"] <- 0.5*(
+   configuration$hyperParams["degRateMin"] +
+     configuration$hyperParams["degRateMax"]) + 0.5*(
+       configuration$hyperParams["degRateMax"] -
+         configuration$hyperParams["degRateMin"])*
+   configuration$simParams["paramRange"]/100
+ 
+ configuration$hyperParams["foldChangeMin"] <- 0.5*(
+   configuration$hyperParams["foldChangeMin"] +
+     configuration$hyperParams["foldChangeMax"]) - 0.5*(
+       configuration$hyperParams["foldChangeMax"] -
+         configuration$hyperParams["foldChangeMin"])*
+   configuration$simParams["paramRange"]/100
+ configuration$hyperParams["foldChangeMax"] <- 0.5*(
+   configuration$hyperParams["foldChangeMin"] +
+     configuration$hyperParams["foldChangeMax"]) + 0.5*(
+       configuration$hyperParams["foldChangeMax"] -
+         configuration$hyperParams["foldChangeMin"])*
+   configuration$simParams["paramRange"]/100
+ 
 
-  configuration$hyperParams["degRateMin"] <- 0.5*(
-    configuration$hyperParams["degRateMin"] +
-      configuration$hyperParams["degRateMax"]) - 0.5*(
-      configuration$hyperParams["degRateMax"] -
-        configuration$hyperParams["degRateMin"])*
-    configuration$simParams["paramRange"]/100
-  configuration$hyperParams["degRateMax"] <- 0.5*(
-    configuration$hyperParams["degRateMin"] +
-      configuration$hyperParams["degRateMax"]) + 0.5*(
-      configuration$hyperParams["degRateMax"] -
-        configuration$hyperParams["degRateMin"])*
-    configuration$simParams["paramRange"]/100
+# stepper is not included in configdata. This can be changed
+ configuration$stepper <- stepper
 
-  configuration$hyperParams["foldChangeMin"] <- 0.5*(
-    configuration$hyperParams["foldChangeMin"] +
-      configuration$hyperParams["foldChangeMax"]) - 0.5*(
-      configuration$hyperParams["foldChangeMax"] -
-        configuration$hyperParams["foldChangeMin"])*
-    configuration$simParams["paramRange"]/100
-  configuration$hyperParams["foldChangeMax"] <- 0.5*(
-    configuration$hyperParams["foldChangeMin"] +
-      configuration$hyperParams["foldChangeMax"]) + 0.5*(
-      configuration$hyperParams["foldChangeMax"] -
-        configuration$hyperParams["foldChangeMin"])*
-    configuration$simParams["paramRange"]/100
 
   nGenes <- length(rSet)
   geneInteraction <- as.matrix(rowData(rSet))
@@ -435,10 +447,82 @@ if(missing(nNoise)){
 
 
   annotationTmp <- outFileGE
-  message("Running the simulations")
+#  message("Running the simulations")
   # print(configuration$stochParams["nNoise"])
+  if(!configuration$options["integrate"] | (nCores==1) | timeSeries){
   Time_evolution_test<- simulateGRCCpp(geneInteraction, configuration,outFileGE,
                                        outFileParams,outFileIC, stepperInt)
+  } else {
+    if(nCores>1 & !timeSeries){
+      configuration$options["integrate"] <- FALSE
+    Time_evolution_test<- simulateGRCCpp(geneInteraction, configuration,outFileGE,
+                                         outFileParams,outFileIC, stepperInt)
+    configuration$options["integrate"] <- TRUE
+    require("doFuture")
+    multiprocess <- NULL
+    doFuture::registerDoFuture()
+    future::plan(future::multiprocess)
+    
+    configList <- list()
+    parModel <- floor(configuration$simParams["numModels"]/nCores)
+    gEFileList <- character(length = nCores)
+    paramFileList <- character(length = nCores)
+    iCFileList <- character(length = nCores)
+
+    
+    parameters <- utils::read.table(outFileParams, header = FALSE)
+    ic <- utils::read.table(outFileIC, header = FALSE)
+    
+    for(i in seq(1,nCores)){
+      parConfig <- configuration
+
+      gEFileList[i] <- tempfile(fileext = ".txt")
+      paramFileList[i] <- tempfile(fileext = ".txt")
+      iCFileList[i] <- tempfile(fileext = ".txt")
+      if(i==nCores){
+        parConfig$simParams["numModels"] <- 
+          configuration$simParams["numModels"] - (nCores-1)*parModel
+        paramPar <- parameters[(((i-1)*parModel+1):(nrow(parameters))),]
+        icPar <- ic[(((i-1)*parModel+1):(nrow(parameters))),]
+        
+      } else {
+        parConfig$simParams["numModels"] <- parModel
+        paramPar <- parameters[(((i-1)*parModel+1):(i*parModel)),]
+        icPar <- ic[(((i-1)*parModel+1):(i*parModel)),]
+        
+      }
+      
+      configList[[i]] <- parConfig
+      
+      utils::write.table(paramPar, file = paramFileList[i],
+                         sep = "\t", quote = FALSE, row.names = FALSE,
+                         col.names = FALSE)
+      utils::write.table(icPar, file = iCFileList[i],
+                         sep = "\t", quote = FALSE, row.names = FALSE,
+                         col.names = FALSE)
+      
+    }
+
+    x <- foreach::foreach(configurationTmp = configList,outFileGETmp = gEFileList,
+                 outFileParamsTmp=paramFileList, outFileICTmp=iCFileList,
+                 .export = c("geneInteraction","stepperInt")) %dopar% {
+
+            simulateGRCCpp(
+              geneInteraction, configurationTmp,outFileGETmp, outFileParamsTmp,
+              outFileICTmp, stepperInt)
+            
+    
+                 }
+    geList <- list()
+    for(i in seq(1,nCores)){
+      
+      geList[[i]] <- utils::read.table(iCFileList[i], 
+                                       header = FALSE)
+    }
+    geneExpression <- do.call(rbind, geList)
+    
+    }
+  }
     if(configuration$options["integrate"]){
 
       
@@ -496,7 +580,8 @@ if(missing(nNoise)){
                          metadata = metadataTmp)
         return(rSet)
       }
-    geneExpression <- utils::read.table(outFileGE, header = FALSE)
+      if(!(nCores>1 & !timeSeries)) 
+        geneExpression <- utils::read.table(outFileGE, header = FALSE)
 
     if(
       (configuration$simParams["printStart"] + 
@@ -573,11 +658,12 @@ if(missing(nNoise)){
 
     paramName <- sracipeGenParamNames(rSet)
     # paramFile <- paste0("tmp/",outFile,"_parameters.txt")
-    parameters <- utils::read.table(outFileParams, header = FALSE)
+    if(!(nCores>1 & !timeSeries)) 
+      parameters <- utils::read.table(outFileParams, header = FALSE)
     colnames(parameters) <- paramName
 
     # icFile <- paste0("tmp/",outFile,"_IC.txt")
-    ic <- utils::read.table(outFileIC, header = FALSE)
+    if(!(nCores>1 & !timeSeries)) ic <- utils::read.table(outFileIC, header = FALSE)
     colnames(ic) <- geneNames
     metadataTmp$normalized <- FALSE
 
@@ -629,10 +715,9 @@ if(missing(nNoise)){
         metadataTmp$knockOutSimulations <- names(knockOutData)
 
   }
-    }
-  else {
+    } else {
       paramName <- sracipeGenParamNames(rSet)
-      parameters <- utils::read.table(outFileParams, header = FALSE)
+      if(!(nCores>1 & !timeSeries)) parameters <- utils::read.table(outFileParams, header = FALSE)
       colnames(parameters) <- paramName
       
       ic <- utils::read.table(outFileIC, header = FALSE)
@@ -660,6 +745,5 @@ if(missing(nNoise)){
 
 return(rSet)
 }
-
 
 
