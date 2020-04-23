@@ -127,7 +127,7 @@
 #' RACIPE simulations. 
 #' @param nCores (optional) integer. Default \code{1}
 #' Number of cores to be used for computation. Utilizes \code{multiprocess} from 
-#' \link{doFuture} pacakge. Will not work in Rstudio.
+#' \code{doFuture} pacakge. Will not work in Rstudio.
 #' @return \code{RacipeSE} object. RacipeSE class inherits 
 #' \code{SummarizedExperiment} and contains the circuit, parameters, 
 #' initial conditions,
@@ -458,7 +458,8 @@ if(missing(nNoise)){
     Time_evolution_test<- simulateGRCCpp(geneInteraction, configuration,outFileGE,
                                          outFileParams,outFileIC, stepperInt)
     configuration$options["integrate"] <- TRUE
-    require("doFuture")
+    requireNamespace("doFuture")
+    requireNamespace("future")
     multiprocess <- NULL
     doFuture::registerDoFuture()
     future::plan(future::multiprocess)

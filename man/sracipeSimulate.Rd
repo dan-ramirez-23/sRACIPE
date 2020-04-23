@@ -200,7 +200,7 @@ RACIPE simulations.}
 
 \item{nCores}{(optional) integer. Default \code{1}
 Number of cores to be used for computation. Utilizes \code{multiprocess} from 
-\link{doFuture} pacakge. Will not work in Rstudio.}
+\code{doFuture} pacakge. Will not work in Rstudio.}
 
 \item{...}{Other arguments}
 }
