@@ -459,10 +459,9 @@ if(missing(nNoise)){
                                          outFileParams,outFileIC, stepperInt)
     configuration$options["integrate"] <- TRUE
     requireNamespace("doFuture")
-    requireNamespace("future")
     multiprocess <- NULL
-    doFuture::registerDoFuture()
-    future::plan(future::multiprocess)
+    registerDoFuture()
+    plan(future::multiprocess)
     
     configList <- list()
     parModel <- floor(configuration$simParams["numModels"]/nCores)
@@ -504,7 +503,7 @@ if(missing(nNoise)){
       
     }
 
-    x <- foreach::foreach(configurationTmp = configList,outFileGETmp = gEFileList,
+    x <- foreach(configurationTmp = configList,outFileGETmp = gEFileList,
                  outFileParamsTmp=paramFileList, outFileICTmp=iCFileList,
                  .export = c("geneInteraction","stepperInt")) %dopar% {
 
