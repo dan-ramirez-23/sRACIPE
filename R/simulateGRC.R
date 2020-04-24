@@ -461,7 +461,7 @@ if(missing(nNoise)){
     requireNamespace("doFuture")
     multiprocess <- NULL
     registerDoFuture()
-    plan(future::multiprocess)
+    plan(multiprocess)
     
     configList <- list()
     parModel <- floor(configuration$simParams["numModels"]/nCores)
