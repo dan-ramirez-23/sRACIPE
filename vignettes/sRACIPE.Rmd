@@ -77,6 +77,11 @@ library(sRACIPE)
 # Load a demo circuit
 data("demoCircuit")
 demoCircuit
+# A circuit from a file can be read as 
+# demoCircuit <- read.table("filePath/filename", header=T, sep="\t")
+
+# The circuit file can also be directly used in the sracipeSimulate function
+# rSet <- sracipeSimulate(circuit = "inputs/test.tpo")
 
 ```
 

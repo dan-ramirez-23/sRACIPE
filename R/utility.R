@@ -1,3 +1,5 @@
+#' @keywords internal
+#' @export
 getInteractions <- function(value) {
   interaction = 1
   nInteractions <- sum(value > 0)
@@ -20,6 +22,7 @@ getInteractions <- function(value) {
 }
 
 #' @export
+#' @keywords internal
 #' @title Generate parameter names for a circuit
 #' @param circuit RacipeSE object or topology as data.frame or filename
 #' @examples
@@ -71,6 +74,7 @@ sracipeGenParamNames <- function(circuit = "inputs/test.tpo") {
   return(as.character(paramList))
 }
 
+#' @keywords internal
 .loadNetworkFile <- function( networkFile = "inputs/test.net") {
   #' Loads the network/topology file.
   #'

@@ -10,17 +10,15 @@ If you use sRACIPE, please consider citing our paper [Role of noise and parametr
 
 *Installation*
 
-if (!requireNamespace("BiocManager", quietly = TRUE))
+    if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+    BiocManager::install("sRACIPE")
 
-install.packages("BiocManager")
+Or install the github version for new features. This will allow installation of 
+most recent sRACIPE even if you are using older R and Bioconductor.
 
-BiocManager::install("sRACIPE")
-
-Or install the development version of the package from Github.
-
-library(devtools)
-
-install_github(“vivekkohar/sRACIPE”)
+    library(devtools)
+    install_github(“vivekkohar/sRACIPE”)
 
 Build Reports
 ------

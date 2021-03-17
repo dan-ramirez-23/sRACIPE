@@ -6,7 +6,7 @@
 #' @importFrom S4Vectors metadata
 #' @description Simulate a gene regulatory circuit using its topology as the
 #' only input. It will generate an ensemble of random models.
-#' @param circuit data.frame or character. The file containing the circuit or
+#' @param circuit data.frame or character (path of the file containing the circuit) 
 #' @param config  (optional) List. It contains simulation parameters 
 #' like integration method
 #' (stepper) and other lists or vectors like simParams, 
@@ -678,7 +678,7 @@ if(missing(nNoise)){
 
         for(ko in seq_along(knockOut)){
           koGene <- knockOut[[ko]]
-          knockOut_number <- which(koGene==geneNames)
+          knockOut_number <- which(koGene%in%geneNames)
           if(length(knockOut_number)==0){
             message("knockOut gene not found in the circuit")
             return(rSet)
