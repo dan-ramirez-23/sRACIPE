@@ -327,6 +327,7 @@ sracipeHeatmapSimilarity = function(
 # Helper functions
 #########################################################
 #' @title Find nth minimum value from a vector
+#' @keywords internal
 #' @description A utility function to find the nth minimum
 #' @param x the given unsorted vector
 #' @param index N.
@@ -347,6 +348,7 @@ sracipeHeatmapSimilarity = function(
 
 
 #' @title Find variance of permutations
+#' @keywords internal
 #' @description A utility function to generate permutations 
 #' @param simulated.refCor Correlation matrix of simulated and reference data
 #' @param clusterCut The original cluster assignments
@@ -375,6 +377,7 @@ sracipeHeatmapSimilarity = function(
 }
 #############################################
 #' @title Returns the variance array after permutations.
+#' @keywords internal
 #' @description A utility function.
 #' @param dataSimulation Simulation data to be compared.
 #' @param dataReference Reference data with which to compare.
@@ -417,6 +420,7 @@ sracipeHeatmapSimilarity = function(
 
 #############################################
 #' @title Finds the variance corresponding to a given value.
+#' @keywords internal
 #' @description  A utility function for calculating the p values.
 #' @param permutedVar An array containing the distance of clusters for 
 #' each model for every permutation.
@@ -448,6 +452,7 @@ to achieve the required pValue.
 #############################################
 
 #' @title Finds the variance corresponding to a given value.
+#' @keywords internal
 #' @description A utility function to calculate the absolute p values.
 #' @param permutedVar An array containing the distance of clusters for 
 #' each model for every permutation.
