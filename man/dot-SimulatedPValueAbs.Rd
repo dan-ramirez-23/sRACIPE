@@ -18,3 +18,4 @@ p-values for each model.
 \description{
 A utility function to calculate the absolute p values.
 }
+\keyword{internal}

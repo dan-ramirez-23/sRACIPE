@@ -21,3 +21,4 @@ An array of dimension n.models by nClusters by permutations
 \description{
 A utility function to generate permutations
 }
+\keyword{internal}

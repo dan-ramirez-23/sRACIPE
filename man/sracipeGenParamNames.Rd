@@ -22,3 +22,4 @@ sracipeCircuit(rSet) <- demoCircuit
 paramNames <- sRACIPE::sracipeGenParamNames(rSet)
 
 }
+\keyword{internal}

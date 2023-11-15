@@ -2,6 +2,7 @@
 #' @export
 #' @title Simulate a gene regulatory circuit
 #' @import SummarizedExperiment
+#' @import doRNG
 #' @importFrom utils read.table write.table data
 #' @importFrom S4Vectors metadata
 #' @description Simulate a gene regulatory circuit using its topology as the
@@ -459,9 +460,9 @@ if(missing(nNoise)){
                                          outFileParams,outFileIC, stepperInt)
     configuration$options["integrate"] <- TRUE
     requireNamespace("doFuture")
-    multiprocess <- NULL
+    #multiprocess <- NULL
     registerDoFuture()
-    plan(multiprocess)
+    plan(multisession)
     
     configList <- list()
     parModel <- floor(configuration$simParams["numModels"]/nCores)
@@ -505,7 +506,7 @@ if(missing(nNoise)){
 
     x <- foreach(configurationTmp = configList,outFileGETmp = gEFileList,
                  outFileParamsTmp=paramFileList, outFileICTmp=iCFileList,
-                 .export = c("geneInteraction","stepperInt")) %dopar% {
+                 .export = c("geneInteraction","stepperInt")) %dorng% {
 
             simulateGRCCpp(
               geneInteraction, configurationTmp,outFileGETmp, outFileParamsTmp,

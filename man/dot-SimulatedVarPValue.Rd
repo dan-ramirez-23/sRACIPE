@@ -18,3 +18,4 @@ p-values for each model.
 \description{
 A utility function for calculating the p values.
 }
+\keyword{internal}

@@ -45,7 +45,7 @@ sracipeSimulate(
 )
 }
 \arguments{
-\item{circuit}{data.frame or character. The file containing the circuit or}
+\item{circuit}{data.frame or character (path of the file containing the circuit)}
 
 \item{config}{(optional) List. It contains simulation parameters 
 like integration method

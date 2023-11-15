@@ -17,3 +17,4 @@ the nth minimum element of the vector
 \description{
 A utility function to find the nth minimum
 }
+\keyword{internal}

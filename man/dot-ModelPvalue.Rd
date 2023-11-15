@@ -35,3 +35,4 @@ An array of dimension n.models by nClusters by permutations.
 \description{
 A utility function.
 }
+\keyword{internal}
