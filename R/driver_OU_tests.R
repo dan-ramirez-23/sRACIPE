@@ -6,7 +6,7 @@ library(Rcpp)
 # ### Install
 .libPaths("/Users/danramirez/localR/4.2.2-arm")
 .libPaths()
-devtools::install(args="--verbose")
+#devtools::install(args="--verbose")
 
 devtools::install_github("dan-ramirez-23/sRACIPE")
 
