@@ -8,11 +8,13 @@ rm(list=ls())
 .libPaths("/Users/danramirez/localR/4.2.2-arm")
 .libPaths()
 devtools::install()
-devtools::install_github("dan-ramirez-23/sRACIPE")
+# this commit works: 100defc3e22c96e4c46de1e7f6af3c0b1050d2d9
+# this one doesnt, even though identical code: a1fafbec7e1039245996b2e1b540084403b38852
+devtools::install_github("dan-ramirez-23/sRACIPE@a1fafbec7e1039245996b2e1b540084403b38852")
 
 
-devtools::build()
-devtools::check()
+#devtools::build()
+#devtools::check()
 
 
 
