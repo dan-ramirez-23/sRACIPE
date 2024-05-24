@@ -76,7 +76,7 @@ void stepEM_OU( std::vector <double> &expression_gene,
              const double &print_interval,
              const double &D,
              const double &h,
-             const double &ouNoise_t,
+             const double &ouNoise_tcorr,
              std::vector <double> &prevNoise);
 void stepRK4( std::vector <double> &expression_gene,
         std::ofstream &out_GE,
