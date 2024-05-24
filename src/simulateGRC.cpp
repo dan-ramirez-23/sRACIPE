@@ -254,6 +254,7 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
   double noiseScalingFactor = stochasticParameters[1];
   double initialNoise = stochasticParameters[2];
   double shotNoise = static_cast<double>(stochasticParameters[4]);
+  double ou_tcorr = static_cast<double>(stochasticParameters[5]);
 
   double gMin = hyperParameters[0];
   double gMax = hyperParameters[1];
@@ -428,6 +429,8 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
           //array for current gene expression
           std::vector <double> expressionGene0(numberGene);
           //array for initial gene expression
+          std::vector <double> prevNoise(numberGene);
+          //array for current noise 
           if(!genIC)
           {
             for(size_t icCounter=0;icCounter <numberGene; icCounter++)
@@ -469,6 +472,7 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
           for(size_t geneCount1=0;geneCount1<numberGene;geneCount1++)
           {
             expressionGene[geneCount1]=expressionGene0[geneCount1];
+            prevNoise[geneCount1]=0; // use 0 as initial noise value
           }
 
           for(size_t fileCount=0;fileCount<nNoise;fileCount++)
@@ -517,6 +521,21 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
                       sdFactor,
                       outputPrecision,printStart, printInterval,h,
                       rkTolerance);
+              break;
+            case 6:
+//              Rcout<<"EM_OU";
+              // EM with OU noise
+              stepEM_OU( expressionGene, outGE, simulationTime,
+                    numberGene, geneInteraction, gGene, kGene, nGene,
+                    lambdaGene, threshGeneLog, interactionTypes,
+                    sdFactor, shotNoise, Darray,
+                    outputPrecision, printStart, printInterval, D, h,
+                    ou_tcorr, prevNoise);
+              // stepEM( expressionGene, outGE, simulationTime,
+              //       numberGene, geneInteraction, gGene, kGene, nGene,
+              //       lambdaGene, threshGeneLog, interactionTypes,
+              //       sdFactor, shotNoise, Darray,
+              //       outputPrecision, printStart, printInterval, D, h);
               break;
 
             default:

@@ -2,6 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
+driver.R
+driver2.R
 src/*.o
 src/*.so
 src/*.dll

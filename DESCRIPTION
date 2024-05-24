@@ -16,7 +16,7 @@ Suggests: knitr, BiocStyle, rmarkdown, tinytest, doFuture
 VignetteBuilder: knitr
 LinkingTo: Rcpp
 biocViews: ResearchField, SystemsBiology, MathematicalBiology, GeneExpression, GeneRegulation, GeneTarget
-Depends: R (>= 3.6.0),SummarizedExperiment, methods, Rcpp, doRNG
+Depends: R (>= 3.6.0),SummarizedExperiment, methods, Rcpp, doFuture, doRNG
 Imports: ggplot2, reshape2, MASS, RColorBrewer, gridExtra,visNetwork, gplots, umap, htmlwidgets, S4Vectors, BiocGenerics, grDevices, stats, utils, graphics 
 RoxygenNote: 7.2.3
 URL: https://vivekkohar.github.io/sRACIPE/, https://github.com/vivekkohar/sRACIPE, https://geneex.jax.org/

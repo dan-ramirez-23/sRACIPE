@@ -3,6 +3,7 @@
 #' @title Simulate a gene regulatory circuit
 #' @import SummarizedExperiment
 #' @import doRNG
+#' @import doFuture
 #' @importFrom utils read.table write.table data
 #' @importFrom S4Vectors metadata
 #' @description Simulate a gene regulatory circuit using its topology as the
@@ -158,7 +159,7 @@ sracipeSimulate <- function( circuit="inputs/test.tpo", config = config,
                       plotToFile = FALSE,
                       genIC = TRUE, genParams = TRUE,
                       integrate = TRUE, rkTolerance = 0.01, timeSeries = FALSE,
-                      nCores = 1L,
+                      nCores = 1L, ouNoise_t=1,
                       ...) {
  rSet <- RacipeSE()
  metadataTmp <- metadata(rSet)
@@ -274,6 +275,9 @@ if(nCores<1) {
  }
  if(!missing(shotNoise)){
    configuration$stochParams["shotNoise"] <- shotNoise
+ }
+ if(!missing(ouNoise_t)){
+   configuration$stochParams["ouNoise_tcorr"] <- ouNoise_t
  }
  if(!missing(scaledNoise)){
    configuration$options["scaledNoise"] <-scaledNoise
@@ -432,9 +436,10 @@ if(missing(nNoise)){
   stepperInt <- 1L
   if(configuration$stepper == "RK4"){ stepperInt <- 4L}
   if(configuration$stepper == "DP") {stepperInt <- 5L}
+  if(configuration$stepper == "EM_OU") {stepperInt <- 6L}
   
   if(configuration$stochParams["nNoise"] > 0) {
-    if(stepper != "EM"){
+    if(stepper != "EM" && stepper != "EM_OU"){
       warnings("Defaulting to EM stepper for stochastic simulations")
       configuration$stepper <- "EM"
       stepperInt <- 1L
