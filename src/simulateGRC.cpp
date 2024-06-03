@@ -220,7 +220,7 @@ void selectIcRange(const int numberGene, IntegerMatrix geneInteraction,
 
 int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
                 Rcpp::List config, String outFileGE, String outFileParams,
-                String outFileIC,
+                String outFileIC, String outFileNoise,
               const int stepper = 1)
 
 {
@@ -284,6 +284,7 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
   std::string fileNameGE = outFileGE;
   std::string fileNameParam = outFileParams;
   std::string fileNameIC = outFileIC;
+  std::string fileNameNoise = outFileNoise;
 
 
 
@@ -343,6 +344,14 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
         return 1;
         }
     }
+
+
+    std::ofstream outNoise(fileNameNoise, std::ios::out);
+      if(!outNoise.is_open()) {     Rcout << "Cannot open noise output file.\n";
+        return 1;}
+
+
+
     //  containerType state;
     std::vector<size_t> tgtGeneTmp;
     //vector containing source and type of nth interaction
@@ -530,7 +539,7 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
                     lambdaGene, threshGeneLog, interactionTypes,
                     sdFactor, shotNoise, Darray,
                     outputPrecision, printStart, printInterval, D, h,
-                    ou_tcorr, prevNoise);
+                    ou_tcorr, prevNoise, outNoise);
               // stepEM( expressionGene, outGE, simulationTime,
               //       numberGene, geneInteraction, gGene, kGene, nGene,
               //       lambdaGene, threshGeneLog, interactionTypes,
@@ -550,6 +559,7 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
           }
 
           outGE<<"\n";
+          outNoise<<"\n";
         }
       }
 
@@ -557,6 +567,7 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
     outGE.close();
     outParam.close();
     outIC.close();
+    outNoise.close();
     if(inIC.is_open()) inIC.close();
     if(inParams.is_open()) inParams.close();
 

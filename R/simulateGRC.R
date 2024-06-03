@@ -370,6 +370,7 @@ if(nCores<1) {
   outFileGE <- tempfile(fileext = ".txt")
   outFileParams <- tempfile(fileext = ".txt")
   outFileIC <- tempfile(fileext = ".txt")
+  outFileNoise <- tempfile(fileext = ".txt")
   if(genParams){
   message("Generating gene thresholds")
   #Rcpp::sourceCpp("src/thresholdGenerator.cpp")
@@ -456,13 +457,15 @@ if(missing(nNoise)){
 #  message("Running the simulations")
   # print(configuration$stochParams["nNoise"])
   if(!configuration$options["integrate"] | (nCores==1) | timeSeries){
+  #message("Case 1, line 460")
   Time_evolution_test<- simulateGRCCpp(geneInteraction, configuration,outFileGE,
-                                       outFileParams,outFileIC, stepperInt)
+                                       outFileParams,outFileIC, outFileNoise, stepperInt)
   } else {
     if(nCores>1 & !timeSeries){
       configuration$options["integrate"] <- FALSE
+    #message("Case 2, line 467")
     Time_evolution_test<- simulateGRCCpp(geneInteraction, configuration,outFileGE,
-                                         outFileParams,outFileIC, stepperInt)
+                                         outFileParams,outFileIC, outFileNoise, stepperInt)
     configuration$options["integrate"] <- TRUE
     requireNamespace("doFuture")
     #multiprocess <- NULL
@@ -513,9 +516,10 @@ if(missing(nNoise)){
                  outFileParamsTmp=paramFileList, outFileICTmp=iCFileList,
                  .export = c("geneInteraction","stepperInt")) %dorng% {
 
+            #message("Case 3, line 519")
             simulateGRCCpp(
               geneInteraction, configurationTmp,outFileGETmp, outFileParamsTmp,
-              outFileICTmp, stepperInt)
+              outFileICTmp, outFileNoise, stepperInt)
             
     
                  }
@@ -586,8 +590,25 @@ if(missing(nNoise)){
                          metadata = metadataTmp)
         return(rSet)
       }
-      if(!(nCores>1 & !timeSeries)) 
-        geneExpression <- utils::read.table(outFileGE, header = FALSE)
+      if(!(nCores>1 & !timeSeries)) {
+
+          geneExpression <- utils::read.table(outFileGE, header = FALSE)
+          #message(paste0("outFileNoise: ",outFileNoise))
+          noiseTrajectory <- tryCatch({
+            utils::read.table(outFileNoise, header = FALSE) # Attempt to run the function
+          }, error = function(e) {
+            # Check if the specific error message is in the error
+            if (grepl("no lines available in input", e$message)) {
+              message("Caught the specific error: ", e$message)
+              return(NULL)  # Return NULL if the specific error occurs
+            } else {
+              stop(e)  # Re-throw the error if it's not the one we're looking for
+            }
+          })
+          metadataTmp$noiseTrajectory <- noiseTrajectory
+      }
+        
+        
 
     if(
       (configuration$simParams["printStart"] + 
@@ -706,8 +727,9 @@ if(missing(nNoise)){
                       sep = "\t", quote = FALSE, row.names = FALSE,
                       col.names = FALSE)
 
+          message("Case 4, line 728")
           Time_evolution_test<- simulateGRCCpp(geneInteraction, configTmp,
-            outFileGE,outFileParams,outFileIC, stepperInt)
+            outFileGE,outFileParams,outFileIC, outFileNoise, stepperInt)
 
 
           # geFile <- paste0("tmp/",outFileKO,"_geneExpression.txt")

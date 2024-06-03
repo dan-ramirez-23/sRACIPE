@@ -137,16 +137,22 @@ void stepEM_OU( std::vector <double> &exprxGene,
              const double &D,
              const double &h,
              const double &ouNoise_t,
-             std::vector <double> &prevNoise){
+             std::vector <double> &prevNoise,
+             std::ofstream &outNoise){
 
   double exprxGeneH[numberGene]; //array for temp gene expression values
   double currNoise[numberGene]; //array for temp gene expression values
   for(int geneCount1=0;geneCount1<numberGene;geneCount1++)
   {
+    //Rcout << "Initial noise for gene "<<geneCount1
+     //     <<": "<<currNoise[geneCount1]<<"\n";
     exprxGeneH[geneCount1] = exprxGene[geneCount1];
-
-    currNoise[geneCount1] = prevNoise[geneCount1] * exp(-h/ouNoise_t) + 
-    D*Darray[geneCount1] * sqrt(1-exp(-2*h/ouNoise_t)) * g_distribution(g_generator);
+    // initial noise values will be 0, then generated for each timestep
+    currNoise[geneCount1] = prevNoise[geneCount1];// * exp(-h/ouNoise_t) + D*Darray[geneCount1] * sqrt(1-exp(-2*h/ouNoise_t)) * g_distribution(g_generator);
+    //prevNoise[geneCount1] = 0;
+    
+    //Rcout << "Initial noise for gene "<<geneCount1
+    //      <<": "<<currNoise[geneCount1]<<"\n";
   }
 
   double i=0.0;
@@ -157,6 +163,10 @@ void stepEM_OU( std::vector <double> &exprxGene,
     for(int geneCount1=0;geneCount1<numberGene;geneCount1++)
     {
       double finalMultiplier=1;
+      currNoise[geneCount1] = prevNoise[geneCount1] * exp(-h/ouNoise_t) + D*Darray[geneCount1] * sqrt(1-exp(-2*h/ouNoise_t)) * g_distribution(g_generator);
+      //Rcout << "Updated noise for gene "<<geneCount1
+      //   <<"at time "<<i<<": "<<currNoise[geneCount1]<<"\n";
+
 
       for(int geneCount2=0;geneCount2<numberGene;geneCount2++)
       {
@@ -193,6 +203,16 @@ void stepEM_OU( std::vector <double> &exprxGene,
       }
       //outGE<<"\n";
     }
+
+    for(int geneCount1=0;geneCount1<numberGene;geneCount1++)
+    {
+      outNoise<<std::setprecision(outputPrecision)
+      <<currNoise[geneCount1]<<"\t";
+    }
+    // outNoise<<"\n";
+  
+  
+  
   }while(i<totTime);
 
   // for(int geneCount1=0;geneCount1<numberGene;geneCount1++)
