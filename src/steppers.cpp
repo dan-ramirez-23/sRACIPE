@@ -144,9 +144,8 @@ void stepEM_OU( std::vector <double> &exprxGene,
   for(int geneCount1=0;geneCount1<numberGene;geneCount1++)
   {
     exprxGeneH[geneCount1] = exprxGene[geneCount1];
-
-    currNoise[geneCount1] = prevNoise[geneCount1] * exp(-h/ouNoise_t) + 
-    D*Darray[geneCount1] * sqrt(1-exp(-2*h/ouNoise_t)) * g_distribution(g_generator);
+    prevNoise[geneCount1] = 0;
+    
   }
 
   double i=0.0;
@@ -157,6 +156,8 @@ void stepEM_OU( std::vector <double> &exprxGene,
     for(int geneCount1=0;geneCount1<numberGene;geneCount1++)
     {
       double finalMultiplier=1;
+      currNoise[geneCount1] = prevNoise[geneCount1] * exp(-h/ouNoise_t) + 
+        D*Darray[geneCount1] * sqrt(1-exp(-2*h/ouNoise_t)) * g_distribution(g_generator);
 
       for(int geneCount2=0;geneCount2<numberGene;geneCount2++)
       {
