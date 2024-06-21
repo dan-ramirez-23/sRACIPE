@@ -148,7 +148,8 @@ void stepEM_OU( std::vector <double> &exprxGene,
      //     <<": "<<currNoise[geneCount1]<<"\n";
     exprxGeneH[geneCount1] = exprxGene[geneCount1];
     // initial noise values will be 0, then generated for each timestep
-    currNoise[geneCount1] = prevNoise[geneCount1];// * exp(-h/ouNoise_t) + D*Darray[geneCount1] * sqrt(1-exp(-2*h/ouNoise_t)) * g_distribution(g_generator);
+    //currNoise[geneCount1] = prevNoise[geneCount1];// * exp(-h/ouNoise_t) + D*Darray[geneCount1] * sqrt(1-exp(-2*h/ouNoise_t)) * g_distribution(g_generator);
+    prevNoise[geneCount1] = D*Darray[geneCount1] * g_distribution(g_generator);
     //prevNoise[geneCount1] = 0;
     
     //Rcout << "Initial noise for gene "<<geneCount1
