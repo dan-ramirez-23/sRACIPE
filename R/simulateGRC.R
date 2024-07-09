@@ -279,6 +279,9 @@ if(nCores<1) {
  if(!missing(ouNoise_t)){
    configuration$stochParams["ouNoise_tcorr"] <- ouNoise_t
  }
+ #message("configuration$stochParams in simulateGRC.R: ")
+ #message(configuration$stochParams)
+
  if(!missing(scaledNoise)){
    configuration$options["scaledNoise"] <-scaledNoise
  }
@@ -456,6 +459,8 @@ if(missing(nNoise)){
 #  message("Running the simulations")
   # print(configuration$stochParams["nNoise"])
   if(!configuration$options["integrate"] | (nCores==1) | timeSeries){
+  #message("stoch params right before passing to simulateGRCCpp: ")
+  #message(configuration$stochParams)  
   Time_evolution_test<- simulateGRCCpp(geneInteraction, configuration,outFileGE,
                                        outFileParams,outFileIC, stepperInt)
   } else {
