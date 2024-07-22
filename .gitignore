@@ -9,3 +9,6 @@ src/*.so
 src/*.dll
 R/driver_OU_tests.R
 ^tests
+vignettes/driver_lambda_bug_tests.R
+tests/racipe_CTS_lambda_new.Rds
+tests/racipe_CTS_lambda_old.Rds
