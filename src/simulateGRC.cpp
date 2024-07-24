@@ -249,6 +249,8 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
   double rkTolerance = simulationParameters[6];
   // double paramRange = simulationParameters[7];
   double printInterval = simulationParameters[8];
+  int sigGene = simulationParameters[9];
+  double maxFC = simulationParameters[10];
   // Rcout<<printInterval<<"\t"<<printStart<<"\n";
   size_t nNoise = 1 + static_cast<size_t>(stochasticParameters[0]);
   double noiseScalingFactor = stochasticParameters[1];
@@ -538,6 +540,23 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
               //       lambdaGene, threshGeneLog, interactionTypes,
               //       sdFactor, shotNoise, Darray,
               //       outputPrecision, printStart, printInterval, D, h);
+              break;
+
+            case 7:
+              stepEM_sig_grad( expressionGene, outGE, simulationTime,
+                    numberGene, geneInteraction, gGene, kGene, nGene,
+                    lambdaGene, threshGeneLog, interactionTypes,
+                    sdFactor, shotNoise, Darray,
+                    outputPrecision, printStart, printInterval, D, h, sigGene,
+                    maxFC);
+              break;
+
+            case 8:
+              stepRK4_sig_grad( expressionGene, outGE, simulationTime,
+                    numberGene, geneInteraction, gGene, kGene, nGene,
+                    lambdaGene, threshGeneLog, interactionTypes,
+                    sdFactor, outputPrecision, printStart, printInterval, h,
+                    sigGene, maxFC);
               break;
 
             default:

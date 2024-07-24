@@ -78,6 +78,7 @@ void stepEM_OU( std::vector <double> &expression_gene,
              const double &h,
              const double &ouNoise_tcorr,
              std::vector <double> &prevNoise);
+             
 void stepRK4( std::vector <double> &expression_gene,
         std::ofstream &out_GE,
         const double &tot_time,
@@ -109,6 +110,50 @@ void stepRK4( std::vector <double> &expression_gene,
           const int &output_precision,
           const double &print_start, const double &print_interval,
           double h, const double &rk_tolerance);
+
+  std::vector<double> calcSigValues(const double &totTime,
+                                      const double &h,
+                                      const double &maxFC);
+
+
+  void stepEM_sig_grad( std::vector <double> &exprxGene,
+               std::ofstream &outGE,
+               const double &totTime,
+               const int &numberGene,
+               Rcpp::IntegerMatrix geneInteraction,
+               const std::vector<double> &gGene,
+               const std::vector<double> &kGene,
+               const std::vector<std::vector<int> > &NGene,
+               const std::vector<std::vector<double> > &lambda_gene,
+               const std::vector<std::vector<double> > &threshold_gene_log,
+               const int &possible_interactions,
+               const double &standard_deviation_factor,
+               const double &D_shot_scaling,
+               const std::vector<double> &Darray,
+               const int &outputPrecision,
+               const double &printStart, const double &printInterval,
+               const double &D,
+               const double &h,
+               const int &sigGene,
+               const double &maxFC);
+
+ void stepRK4_sig_grad( std::vector <double> &exprxGene,
+              std::ofstream &outGE,
+              const double &totTime,
+              const int &numberGene,
+              Rcpp::IntegerMatrix geneInteraction,
+              const std::vector<double> &gGene,
+              const std::vector<double> &kGene,
+              const std::vector<std::vector<int> > &NGene,
+              const std::vector<std::vector<double> > &lambda_gene,
+              const std::vector<std::vector<double> > &threshold_gene_log,
+              const int &possible_interactions,
+              const double &standard_deviation_factor,
+              const int &outputPrecision,
+              const double &printStart, const double &printInterval,
+              const double &h,
+              const int &sigGene,
+              const double &maxFC);
 
 extern size_t convertAdjMatToVector(
      Rcpp::IntegerMatrix gene_interaction, std::vector<size_t>& tgtGene,

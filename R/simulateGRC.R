@@ -440,6 +440,8 @@ if(missing(nNoise)){
   if(configuration$stepper == "RK4"){ stepperInt <- 4L}
   if(configuration$stepper == "DP") {stepperInt <- 5L}
   if(configuration$stepper == "EM_OU") {stepperInt <- 6L}
+  if(configuration$stepper == "EMSig") {stepperInt <- 7L}
+  if(configuration$stepper == "RK4Sig") {stepperInt <- 8L}
   
   if(configuration$stochParams["nNoise"] > 0) {
     if(stepper != "EM" && stepper != "EM_OU"){

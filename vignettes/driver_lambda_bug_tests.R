@@ -57,3 +57,11 @@ hist(assay_new[2,])
 hist(assay_old[1,])
 hist(assay_new[1,])
 
+
+
+
+### edit config
+load("data/configData.rda")
+configData$simParams[["signalGene"]] <- 0
+configData$simParams[["maxFC"]] <- 1
+save(configData, file = "data/configData.rda")
