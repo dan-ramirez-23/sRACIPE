@@ -360,6 +360,7 @@ if(nCores<1) {
 
 # stepper is not included in configdata. This can be changed
  configuration$stepper <- stepper
+ #message(paste0("stepper is ",stepper))
 
 
   nGenes <- length(rSet)
@@ -444,7 +445,7 @@ if(missing(nNoise)){
   if(configuration$stepper == "RK4Sig") {stepperInt <- 8L}
   
   if(configuration$stochParams["nNoise"] > 0) {
-    if(stepper != "EM" && stepper != "EM_OU"){
+    if(stepper != "EM" && stepper != "EM_OU" && stepper != "EMSig"){
       warnings("Defaulting to EM stepper for stochastic simulations")
       configuration$stepper <- "EM"
       stepperInt <- 1L

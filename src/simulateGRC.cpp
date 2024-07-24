@@ -257,8 +257,8 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
   double initialNoise = stochasticParameters[2];
   double shotNoise = static_cast<double>(stochasticParameters[4]);
   double ou_tcorr = static_cast<double>(stochasticParameters[5]);
-  Rcout<<"stochastic param 5 on start of simulateGRCRcpp: "<<stochasticParameters[5]<<"\n";
-  Rcout<<"ou_tcorr on start of simulateGRCRcpp: "<<ou_tcorr<<"\n";
+  //Rcout<<"stochastic param 5 on start of simulateGRCRcpp: "<<stochasticParameters[5]<<"\n";
+  //Rcout<<"ou_tcorr on start of simulateGRCRcpp: "<<ou_tcorr<<"\n";
 
   double gMin = hyperParameters[0];
   double gMax = hyperParameters[1];
