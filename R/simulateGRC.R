@@ -159,7 +159,7 @@ sracipeSimulate <- function( circuit="inputs/test.tpo", config = config,
                       plotToFile = FALSE,
                       genIC = TRUE, genParams = TRUE,
                       integrate = TRUE, rkTolerance = 0.01, timeSeries = FALSE,
-                      nCores = 1L, ouNoise_t=1,
+                      nCores = 1L, ouNoise_t=1, clampGenes = NA, clampValues = NA,
                       ...) {
  rSet <- RacipeSE()
  metadataTmp <- metadata(rSet)
@@ -369,6 +369,29 @@ if(nCores<1) {
   thresholdGene <- rep(0, nGenes)
 
   geneNames <- names(rSet)
+  
+  # add clamp info to config
+  clamps <- rep(0, nGenes)
+  if(!all(is.na(clampGenes))) {
+    clamps[clampGenes] <- 1
+  }
+  configuration$clampGenes <- clamps
+  if(is.matrix(clampValues)) {
+    configuration$clampValues <- clampValues
+  } else if(length(clampValues) == length(clampGenes)) {
+    numModels <- configuration$simParams["numModels"]
+    clampValuesPlaceholder <- clampValues
+    clampValues <- matrix(rep(clampValues, each = numModels), nrow = numModels)
+    configuration$clampValues <- clampValues
+  } else {
+    message("clampValues should be a vector of length clampGenes or a matrix with nModels 
+            rows and length(clampGenes) columns")
+    return(rSet)
+  }
+  
+  message(paste0("clamped genes: ",paste0(clamps, collapse = ",")))
+  
+  
   # outFile <- paste0(Sys.Date(),"_",metadata(rSet)$annotation,"_",
   #                  basename(tempfile()))
   outFileGE <- tempfile(fileext = ".txt")
@@ -443,9 +466,11 @@ if(missing(nNoise)){
   if(configuration$stepper == "EM_OU") {stepperInt <- 6L}
   if(configuration$stepper == "EMSig") {stepperInt <- 7L}
   if(configuration$stepper == "RK4Sig") {stepperInt <- 8L}
+  if(configuration$stepper == "EM_Clamp") {stepperInt <- 9L}
+  message(paste0("stepper: ",stepperInt))
   
   if(configuration$stochParams["nNoise"] > 0) {
-    if(stepper != "EM" && stepper != "EM_OU" && stepper != "EMSig"){
+    if(stepper != "EM" && stepper != "EM_OU" && stepper != "EMSig" && stepper != "EM_Clamp"){
       warnings("Defaulting to EM stepper for stochastic simulations")
       configuration$stepper <- "EM"
       stepperInt <- 1L

@@ -37,7 +37,7 @@ void calcMultiplier(const int& geneCount1, const int& geneCount2,
       Rcout << "Invalid Interation code for Gene"<<geneCount1
             <<" and gene"<<geneCount2<<" interaction"<<"\n";
     }
-
+    
     finalMultiplier=finalMultiplier*geneActMultiplier;
 }
 
@@ -176,6 +176,7 @@ void stepEM_OU( std::vector <double> &exprxGene,
         h*currNoise[geneCount1]+
         D_shot_scaling*D*sqrt(h)*g_distribution(g_generator)*
         Darray[geneCount1]*exprxGene[geneCount1];
+      
       if(exprxGeneH[geneCount1]<0) exprxGeneH[geneCount1]=0;
     }
 
@@ -201,6 +202,120 @@ void stepEM_OU( std::vector <double> &exprxGene,
   //   outGE<<std::setprecision(outputPrecision)<<exprxGene[geneCount1]<<"\t";
   // }
 
+}
+
+
+
+
+
+void stepEM_OU_Clamp( std::vector <double> &exprxGene,
+                std::ofstream &outGE,
+                const double &totTime,
+                const int &numberGene,
+                IntegerMatrix geneInteraction,
+                const std::vector<double> &gGene,
+                const std::vector<double> &kGene,
+                const std::vector<std::vector<int> > &NGene,
+                const std::vector<std::vector<double> > &lambda_gene,
+                const std::vector<std::vector<double> > &threshold_gene_log,
+                const int &possible_interactions,
+                const double &standard_deviation_factor,
+                const double &D_shot_scaling,
+                const std::vector<double> &Darray,
+                const int &outputPrecision,
+                const double &printStart, const double &printInterval,
+                const double &D,
+                const double &h,
+                const double &ouNoise_t,
+                std::vector <double> &prevNoise,
+                std::unordered_map<int, std::vector<double>> &clamps,
+                const int &modelNo){
+  
+  double exprxGeneH[numberGene]; //array for temp gene expression values
+  double currNoise[numberGene]; //array for temp gene expression values
+  for(int geneCount1=0;geneCount1<numberGene;geneCount1++)
+  {
+    auto it = clamps.find(geneCount1);
+    if (it != clamps.end()) {
+      // If clamped, set to the clamped value
+      exprxGeneH[geneCount1] = it->second[modelNo];
+    } else {
+      // else, use ICs
+      exprxGeneH[geneCount1] = exprxGene[geneCount1];
+    }
+    
+    prevNoise[geneCount1] = D*Darray[geneCount1] * g_distribution(g_generator);
+    
+  }
+  
+  double i=0.0;
+  double printTime = printStart;
+  do
+  {
+    i+=h;
+    for(int geneCount1=0;geneCount1<numberGene;geneCount1++)
+    {
+      double finalMultiplier=1;
+      currNoise[geneCount1] = prevNoise[geneCount1] * exp(-h/ouNoise_t) + 
+        D*Darray[geneCount1] * sqrt(1-exp(-2*h/ouNoise_t)) * g_distribution(g_generator);
+      
+      
+      auto it = clamps.find(geneCount1);
+      if (it != clamps.end()) {
+        // If clamped, set to the clamped value
+        exprxGeneH[geneCount1] = it->second[modelNo];
+      } else {
+        // else, compute updates
+        for(int geneCount2=0;geneCount2<numberGene;geneCount2++)
+        {
+          double geneValue=exprxGene[geneCount2];
+          double geneThreshold=threshold_gene_log[geneCount1][geneCount2];
+          int geneN=NGene[geneCount1][geneCount2];
+          double geneLambda=lambda_gene[geneCount1][geneCount2];
+          calcMultiplier(geneCount1, geneCount2, finalMultiplier,
+                         geneValue, geneInteraction, geneN, geneLambda,
+                         geneThreshold);
+        }
+        
+        exprxGeneH[geneCount1] = exprxGene[geneCount1] +
+          h*(gGene[geneCount1]*finalMultiplier-kGene[geneCount1]*
+          exprxGene[geneCount1]) +
+          h*currNoise[geneCount1]+
+          D_shot_scaling*D*sqrt(h)*g_distribution(g_generator)*
+          Darray[geneCount1]*exprxGene[geneCount1];
+        
+        if(exprxGeneH[geneCount1]<0) exprxGeneH[geneCount1]=0;
+        
+        
+      }
+      
+      
+      
+
+    }
+    
+    for(int geneCount1=0;geneCount1<numberGene;geneCount1++){
+      exprxGene[geneCount1]=exprxGeneH[geneCount1];
+      prevNoise[geneCount1]=currNoise[geneCount1];}
+    
+    if((i> printTime) &&
+       (i <= (printTime + printInterval)))
+    {
+      printTime +=printInterval;
+      for(int geneCount1=0;geneCount1<numberGene;geneCount1++)
+      {
+        outGE<<std::setprecision(outputPrecision)
+             <<exprxGene[geneCount1]<<"\t";
+      }
+      //outGE<<"\n";
+    }
+  }while(i<totTime);
+  
+  // for(int geneCount1=0;geneCount1<numberGene;geneCount1++)
+  // {
+  //   outGE<<std::setprecision(outputPrecision)<<exprxGene[geneCount1]<<"\t";
+  // }
+  
 }
 
 

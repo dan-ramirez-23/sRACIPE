@@ -239,6 +239,52 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
   NumericVector hyperParameters =
     as<NumericVector>(config["hyperParams"]);
   LogicalVector options = as<LogicalVector>(config["options"]);
+  NumericVector clampGenes =
+    as<NumericVector>(config["clampGenes"]);
+  NumericMatrix clampValues =
+    as<NumericMatrix>(config["clampValues"]);
+  
+  // Rcout << "clampValues from simulateGrc.cpp:";
+  // Iterate through each element in the matrix and print it
+  //for (int i = 0; i < clampValues.nrow(); ++i) {
+  //  for (int j = 0; j < clampValues.ncol(); ++j) {
+  //    Rcpp::Rcout << "Element at [" << i << ", " << j << "]: " << clampValues(i, j) << std::endl;
+  //  }
+  //}
+  //Rcout << "\n\n";
+  
+  // logic for clamping. if no clamps enabled, ignore this as clampMap is only a necessary param for the clamp stepper
+  bool noClamps = std::all_of(clampGenes.begin(), clampGenes.end(), [](int i) { return i==0; });
+  Rcout << "Noclamps: " << noClamps << "\n";
+  //std::unordered_map<int, double> clampMap;
+  std::unordered_map<int, std::vector<double>> clampMap;
+  if(!noClamps) {
+    int clampIdx = 0;
+    for(int i = 0; i < numberGene; i++) {
+      if(clampGenes[i] == 1) {
+        //clampMap[i] = clampValues[clampIdx];
+        // Create a vector to store the row elements
+        std::vector<double> colVec(clampValues.nrow());
+        // Copy the elements from the matrix row to the vector
+        for (int j = 0; j < clampValues.nrow(); ++j) {
+          colVec[j] = clampValues(j, clampIdx);
+        }
+        
+        clampMap[i] = colVec;
+        clampIdx++;
+      }
+    }
+    
+  }
+  // Rcout << "Printing clamp map below: \n";
+  // for (const auto& pair : clampMap) {
+  //   Rcpp::Rcout << "Key: " << pair.first << ", Value: " << std::endl;
+  //   for (double val : pair.second) {
+  //     Rcpp::Rcout << val << ", ";
+  //   }
+  //   Rcpp::Rcout << std::endl;
+  // }
+  // 
 
   size_t numModels = static_cast<size_t>(simulationParameters[0]);
   double simulationTime = simulationParameters[1];
@@ -251,7 +297,6 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
   double printInterval = simulationParameters[8];
   int sigGene = simulationParameters[9];
   double maxFC = simulationParameters[10];
-  // Rcout<<printInterval<<"\t"<<printStart<<"\n";
   size_t nNoise = 1 + static_cast<size_t>(stochasticParameters[0]);
   double noiseScalingFactor = stochasticParameters[1];
   double initialNoise = stochasticParameters[2];
@@ -559,6 +604,15 @@ int simulateGRCCpp(Rcpp::IntegerMatrix geneInteraction,
                     sigGene, maxFC);
               break;
 
+            case 9:
+              //Rcout<<"EM_OU_Clamp with tau="<<ou_tcorr;
+              stepEM_OU_Clamp( expressionGene, outGE, simulationTime,
+                         numberGene, geneInteraction, gGene, kGene, nGene,
+                         lambdaGene, threshGeneLog, interactionTypes,
+                         sdFactor, shotNoise, Darray,
+                         outputPrecision, printStart, printInterval, D, h,
+                         ou_tcorr, prevNoise, clampMap, modelCount);
+              break;
             default:
               Rcout<< "Error in specifying the stepper.\n";
 

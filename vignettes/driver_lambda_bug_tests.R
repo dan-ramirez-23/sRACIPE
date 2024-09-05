@@ -64,4 +64,6 @@ hist(assay_new[1,])
 load("data/configData.rda")
 configData$simParams[["signalGene"]] <- 0
 configData$simParams[["maxFC"]] <- 1
+#configData$clampNodes <- c()
+#configData$clampValues <- c()
 save(configData, file = "data/configData.rda")
